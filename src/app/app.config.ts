@@ -16,6 +16,7 @@ import {
   withEventReplay,
   withIncrementalHydration,
 } from "@angular/platform-browser";
+import { provideHttpClient, withFetch } from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,5 +29,6 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: "top" }),
     ),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
+    provideHttpClient(withFetch()),
   ],
 };

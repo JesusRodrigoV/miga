@@ -16,7 +16,14 @@
     "module": "preserve",
     "baseUrl": "./",
     "paths": {
-      "@app/*": ["src/app/*"]
+      "@core/*": ["src/app/core/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@features/*": ["src/app/features/*"],
+      "@models/*": ["src/app/core/models/*"],
+      "@services/*": ["src/app/core/services/*"],
+      "@store/*": ["src/app/core/store/*"],
+      "@adapters/*": ["src/app/core/adapters/*"],
+      "@env": ["src/environment/environment.ts"]
     }
   },
   "angularCompilerOptions": {
