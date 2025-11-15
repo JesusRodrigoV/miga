@@ -30,6 +30,7 @@ const initialState: AuthState = {
 };
 
 export const AuthStore = signalStore(
+  { providedIn: "root" },
   withState(initialState),
   withComputed(({ session, profile }) => ({
     isLoggedIn: computed(() => !!session),

@@ -20,22 +20,26 @@ import { provideHttpClient, withFetch } from "@angular/common/http";
 import { providePrimeNG } from "primeng/config";
 import Aura from "@primeuix/themes/aura";
 import { MessageService } from "primeng/api";
-import { provideStore } from '@ngrx/store';
+import { AuthStore } from "@core/stores/auth.store";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideRouter(routes, withComponentInputBinding(), withViewTransitions(), withInMemoryScrolling({ scrollPositionRestoration: "top" })),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withViewTransitions(),
+      withInMemoryScrolling({ scrollPositionRestoration: "top" }),
+    ),
     providePrimeNG({
-        theme: {
-            preset: Aura,
-        },
+      theme: {
+        preset: Aura,
+      },
     }),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideHttpClient(withFetch()),
     provideAnimations(),
     MessageService,
-    provideStore()
-],
+  ],
 };

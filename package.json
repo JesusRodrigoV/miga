@@ -21,7 +21,6 @@
     "@angular/router": "^20.0.0",
     "@angular/ssr": "^20.0.0",
     "@ngrx/signals": "^20.1.0",
-    "@ngrx/store": "^20.1.0",
     "@primeuix/themes": "^1.2.5",
     "@supabase/supabase-js": "^2.81.1",
     "express": "^5.1.0",
