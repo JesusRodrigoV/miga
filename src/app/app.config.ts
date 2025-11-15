@@ -9,7 +9,7 @@ import {
   withInMemoryScrolling,
   withViewTransitions,
 } from "@angular/router";
-
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { routes } from "./app.routes";
 import {
   provideClientHydration,
@@ -17,6 +17,9 @@ import {
   withIncrementalHydration,
 } from "@angular/platform-browser";
 import { provideHttpClient, withFetch } from "@angular/common/http";
+import { providePrimeNG } from "primeng/config";
+import Aura from "@primeuix/themes/aura";
+import { MessageService } from "primeng/api";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,7 +31,14 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
       withInMemoryScrolling({ scrollPositionRestoration: "top" }),
     ),
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+      },
+    }),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideHttpClient(withFetch()),
+    provideAnimations(),
+    MessageService,
   ],
 };

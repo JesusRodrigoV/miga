@@ -1,0 +1,32 @@
+@if (routerLink(); as link) {
+<p-button
+  [routerLink]="link"
+  [label]="label()"
+  [icon]="icon()"
+  [iconPos]="iconPos()"
+  [disabled]="disabled()"
+  [size]="size()"
+  [rounded]="rounded()"
+  [fluid]="fluid()"
+  [variant]="variant()"
+  [severity]="finalSeverity()"
+  [styleClass]="color() ? 'p-button-custom' : undefined"
+  [style.--custom-bg]="color()"
+></p-button>
+} @else {
+<p-button
+  [label]="label()"
+  [icon]="icon()"
+  [iconPos]="iconPos()"
+  [loading]="loading()"
+  [disabled]="disabled()"
+  [size]="size()"
+  [rounded]="rounded()"
+  [fluid]="fluid()"
+  [variant]="variant()"
+  (onClick)="onClick.emit($event)"
+  [severity]="finalSeverity()"
+  [styleClass]="color() ? 'p-button-custom' : undefined"
+  [style.--custom-bg]="color()"
+></p-button>
+}
