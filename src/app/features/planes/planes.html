@@ -1,0 +1,13 @@
+<h2>Mis Planes de Negocio</h2>
+
+<button (click)="crearNuevoPlan()">+ Nuevo Plan</button>
+
+<ul>
+  @for(plan of planes; track plan.id){
+  <li>
+    <strong>{{ plan.estado }}</strong> — creado {{ plan.created_at | date:
+    'shortDate' }}
+    <button (click)="abrir(plan.id)">Abrir</button>
+  </li>
+  }
+</ul>

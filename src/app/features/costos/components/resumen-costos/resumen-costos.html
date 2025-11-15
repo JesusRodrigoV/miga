@@ -1,0 +1,60 @@
+<h2 class="text-xl font-bold mb-4">Parte 3.4: Resumen General de Costos</h2>
+
+<table class="table-auto w-full text-left border border-black">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="border border-black px-4 py-2">Concepto</th>
+      <th class="border border-black px-4 py-2">Monto (Bs)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="border border-black px-4 py-2">Costo de Materia Prima (MP)</td>
+      <td class="border border-black px-4 py-2">
+        {{ totalMP | number: '1.2-2' }}
+      </td>
+    </tr>
+    <tr>
+      <td class="border border-black px-4 py-2">Costo de Mano de Obra (MO)</td>
+      <td class="border border-black px-4 py-2">
+        {{ totalMO | number: '1.2-2' }}
+      </td>
+    </tr>
+    <tr>
+      <td class="border border-black px-4 py-2">Costo Indirecto (CI)</td>
+      <td class="border border-black px-4 py-2">
+        {{ totalCI | number: '1.2-2' }}
+      </td>
+    </tr>
+    <tr>
+      <td class="border border-black px-4 py-2">
+        Costo Ponderado (CP = MP + MO)
+      </td>
+      <td class="border border-black px-4 py-2">{{ cp | number: '1.2-2' }}</td>
+    </tr>
+    <tr>
+      <td class="border border-black px-4 py-2">
+        Costo de Conversión (CC = MO + CI)
+      </td>
+      <td class="border border-black px-4 py-2">{{ cc | number: '1.2-2' }}</td>
+    </tr>
+    <tr>
+      <td class="border border-black px-4 py-2">
+        Costo de Producción (CPcc = MP + MO + CI)
+      </td>
+      <td class="border border-black px-4 py-2">
+        {{ cpcc | number: '1.2-2' }}
+      </td>
+    </tr>
+    <tr>
+      <td class="border border-black px-4 py-2">
+        Costo Unitario (CU = CPcc / unidades)
+      </td>
+      <td class="border border-black px-4 py-2">{{ cu | number: '1.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+@if (msg) {
+<div class="mt-4 text-red-600 font-semibold">{{ msg }}</div>
+}

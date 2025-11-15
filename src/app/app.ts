@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
+import { AuthStore } from "@core/stores/auth.store";
 import { MgScrollTop } from "@shared/components/mg-scroll-top";
 import { Toast } from "primeng/toast";
 
@@ -11,4 +12,9 @@ import { Toast } from "primeng/toast";
 })
 export class App {
   protected title = "miga";
+  private authStore = inject(AuthStore);
+
+  async ngOnInit() {
+    await this.authStore.loadSession();
+  }
 }

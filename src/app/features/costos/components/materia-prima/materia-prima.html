@@ -1,0 +1,121 @@
+<h2>Parte 3.1: Costos - Materia Prima</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div>
+    <label>Nombre del producto:</label>
+    <input type="text" formControlName="nombreProducto" required />
+  </div>
+
+  <div>
+    <label>Unidades producidas:</label>
+    <input
+      type="number"
+      formControlName="unidadesProducidas"
+      min="1"
+      (input)="calcularTotales()"
+    />
+  </div>
+
+  @for (ing of ingredientes.controls; track ing; let i = $index) {
+  <div [formGroup]="asFormGroup(ing)" class="border p-4 rounded-lg mb-6">
+    <h4>Ingrediente {{ i + 1 }}</h4>
+
+    <div>
+      <label>Nombre:</label>
+      <input type="text" formControlName="nombre" />
+    </div>
+
+    <div>
+      <label>U/M (mercado):</label>
+      <select formControlName="unidadMercado" (change)="actualizarPeso(i)">
+        <option value="">-- Seleccione --</option>
+        <option value="libra">Libra</option>
+        <option value="kilo">Kilo</option>
+        <option value="unidad">Unidad</option>
+        <option value="botella">Botella</option>
+        <option value="ml">Mililitros</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Precio Unitario en el mercado (Bs):</label>
+      <input
+        type="number"
+        formControlName="precioMercado"
+        (input)="calcularTotales()"
+      />
+    </div>
+
+    <div>
+      <label>Peso según unidad (g / ml / unidad):</label>
+      <input type="number" formControlName="peso" [disabled]="true" />
+    </div>
+
+    <div>
+      <label>Unidad de peso:</label>
+      <input type="text" formControlName="unidadPeso" [disabled]="true" />
+    </div>
+
+    <div>
+      <label>Cantidad requerida:</label>
+      <input
+        type="number"
+        formControlName="cantidadRequerida"
+        (input)="calcularTotales()"
+      />
+    </div>
+
+    <button type="button" (click)="removeIngrediente(i)">
+      🗑️ Eliminar ingrediente
+    </button>
+  </div>
+  }
+
+  <button type="button" (click)="addIngrediente()">
+    ➕ Agregar ingrediente
+  </button>
+  <br /><br />
+
+  @if (ingredientes.length > 0) {
+  <div>
+    <h3>Resumen de costos</h3>
+    <table border="1" cellpadding="8" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Ingrediente</th>
+          <th>Costo de Ingredientes (Bs)</th>
+          <th>MP/U</th>
+          <th>Costo/U (Bs)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ing of ingredientes.controls; track ing) {
+        <tr>
+          <td>{{ ing.get('nombre')?.value }}</td>
+          <td>{{ ing.get('costoIngrediente')?.value | number:'1.2-2' }}</td>
+          <td>{{ ing.get('mpPorUnidad')?.value | number:'1.2-2' }}</td>
+          <td>{{ ing.get('costoPorUnidad')?.value | number:'1.2-2' }}</td>
+        </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>{{ totalCostoIngredientes | number:'1.2-2' }} Bs</th>
+          <th></th>
+          <th>{{ totalCostoPorUnidad | number:'1.2-2' }} Bs</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  }
+
+  <br />
+  <button type="submit" [disabled]="form.invalid">
+    💾 Guardar Materia Prima
+  </button>
+
+  @if (msg) {
+  <p>{{ msg }}</p>
+  }
+</form>

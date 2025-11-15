@@ -1,0 +1,38 @@
+<h2>Parte 2: Planteamiento de Objetivos SMART</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+  <div>
+    <label>¿Qué se quiere lograr? (Específico)</label><br />
+    <textarea formControlName="que" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>¿A quién está dirigido? (Medible)</label><br />
+    <textarea formControlName="aQuien" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>¿Cuándo se logrará? (Temporal)</label><br />
+    <textarea formControlName="cuando" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>¿Cómo se logrará? (Alcanzable)</label><br />
+    <textarea formControlName="como" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>¿Dónde se implementará? (Relevante)</label><br />
+    <textarea formControlName="donde" rows="3"></textarea>
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Guardar Objetivo</button>
+</form>
+
+@if (msg) {
+<p>{{ msg }}</p>
+} @if (saved) {
+<button [routerLink]="['/costos']" [queryParams]="{ planId: planId }">
+  Siguiente
+</button>
+}

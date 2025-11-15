@@ -1,0 +1,47 @@
+<h2>Parte 1: Idea de Negocio</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+  <div>
+    <label>Fortalezas:</label><br />
+    <textarea formControlName="fortalezas" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>Oportunidades:</label><br />
+    <textarea formControlName="oportunidades" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>Idea de negocio:</label><br />
+    <textarea formControlName="ideaNegocio" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>Nombre del negocio:</label><br />
+    <input type="text" formControlName="nombreNegocio" />
+  </div>
+
+  <div>
+    <label>Propuesta de valor:</label><br />
+    <textarea formControlName="propuestaValor" rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>Motivación:</label><br />
+    <textarea formControlName="motivacion" rows="3"></textarea>
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Guardar</button>
+
+  @if (msg) {
+  <p>{{ msg }}</p>
+  } @if (msg === '✅ Guardado con éxito' && planId) {
+  <button [routerLink]="['/objetivo']" [queryParams]="{ planId: planId }">
+    👉 Siguiente: Objetivo SMART →
+  </button>
+  }
+</form>
+
+@if (msg) {
+<p>{{ msg }}</p>
+}

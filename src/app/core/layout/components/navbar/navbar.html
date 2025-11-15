@@ -1,0 +1,16 @@
+<nav>
+  <ul>
+    <li><a routerLink="/idea">Idea</a></li>
+    <li><a routerLink="/objetivo">Objetivo</a></li>
+    <li><a routerLink="/costos">Costos</a></li>
+    <li><a> Pon en marcha </a></li>
+  </ul>
+
+  <div style="margin-top: 10px">
+    @if(userName()){
+    <p>👤 {{ userName() }}</p>
+    }
+
+    <button (click)="logout()">🔓 Cerrar sesión</button>
+  </div>
+</nav>

@@ -1,0 +1,41 @@
+<h2>Registro e Ingreso</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label>
+    Nombre:
+    <input type="text" formControlName="nombre" />
+  </label>
+  @if( form.get('nombre')?.invalid && form.get('nombre')?.touched ){
+  <div>Nombre es requerido.</div>
+  }
+
+  <label>
+    Apellido:
+    <input type="text" formControlName="apellido" />
+  </label>
+
+  <label>
+    Correo electrónico:
+    <input type="email" formControlName="email" />
+  </label>
+
+  <label>
+    Contraseña:
+    <input type="password" formControlName="password" />
+  </label>
+  @if(form.get('password')?.invalid && form.get('password')?.touched){
+  <div>Contraseña inválida.</div>
+  }
+
+  <button type="submit" [disabled]="form.invalid">
+    {{ modoLogin ? 'Ingresar' : 'Crear cuenta e ingresar' }}
+  </button>
+
+  <button type="button" (click)="modoLogin = !modoLogin">
+    {{ modoLogin ? 'Volver a crear cuenta' : 'Ya tengo cuenta' }}
+  </button>
+
+  @if(msg){
+  <p>{{ msg }}</p>
+  }
+</form>

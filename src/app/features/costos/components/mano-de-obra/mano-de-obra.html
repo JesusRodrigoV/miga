@@ -1,0 +1,40 @@
+<h2>Parte 2: Mano de Obra Directa</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+  <div>
+    <label>Salario Mínimo Nacional (Bs):</label>
+    <input type="number" formControlName="salarioMinimo" />
+  </div>
+
+  <div>
+    <label>Días por mes:</label>
+    <input type="number" formControlName="diasPorMes" />
+  </div>
+
+  <div>
+    <label>Horas por día:</label>
+    <input type="number" formControlName="horasPorDia" />
+  </div>
+
+  <div>
+    <label>Horas requeridas por receta:</label>
+    <input type="number" formControlName="horasReceta" />
+  </div>
+
+  <hr />
+
+  <p>
+    <strong>Pago por hora (calculado):</strong> {{ pagoHora | number: '1.2-2' }}
+    Bs
+  </p>
+  <p>
+    <strong>Pago total por receta:</strong> {{ pagoReceta | number: '1.2-2' }}
+    Bs
+  </p>
+
+  <button type="submit" [disabled]="form.invalid">Guardar y continuar</button>
+</form>
+
+@if (msg) {
+<p>{{ msg }}</p>
+}
