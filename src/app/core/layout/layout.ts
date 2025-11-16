@@ -4,14 +4,13 @@ import {
   inject,
   signal,
 } from "@angular/core";
-import { Footer, Navbar } from "./components";
+import { Footer, Header } from "./components";
 import { Router, RouterOutlet } from "@angular/router";
-import { supabase } from "@core/supabase.client";
 import { AuthStore } from "@core/stores/auth.store";
 
 @Component({
   selector: "app-layout",
-  imports: [RouterOutlet, Navbar, Footer],
+  imports: [RouterOutlet, Header, Footer],
   templateUrl: "./layout.html",
   styleUrl: "./layout.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

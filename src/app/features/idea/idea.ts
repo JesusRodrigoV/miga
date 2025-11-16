@@ -6,7 +6,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { supabase } from "@core/supabase.client";
+import { supabase } from "@core/services";
 
 @Component({
   selector: "app-idea",

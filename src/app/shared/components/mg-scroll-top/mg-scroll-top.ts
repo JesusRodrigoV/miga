@@ -12,5 +12,6 @@ import { ScrollTop } from "primeng/scrolltop";
 export class MgScrollTop {
   customButtonProps: ButtonProps = {
     rounded: false,
+    styleClass: "mg-custom-scrolltop",
   };
 }

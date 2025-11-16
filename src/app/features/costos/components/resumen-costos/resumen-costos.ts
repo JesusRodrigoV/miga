@@ -1,7 +1,7 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { supabase } from "@core/supabase.client";
+import { supabase } from "@core/services";
 
 @Component({
   selector: "app-resumen-costos",

@@ -5,6 +5,7 @@ import {
 } from "@angular/core";
 import {
   provideRouter,
+  TitleStrategy,
   withComponentInputBinding,
   withInMemoryScrolling,
   withViewTransitions,
@@ -20,7 +21,7 @@ import { provideHttpClient, withFetch } from "@angular/common/http";
 import { providePrimeNG } from "primeng/config";
 import Aura from "@primeuix/themes/aura";
 import { MessageService } from "primeng/api";
-import { AuthStore } from "@core/stores/auth.store";
+import { CustomTitleStrategy } from "@core/services/custom-title-strategy";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -41,5 +42,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideAnimations(),
     MessageService,
+    { provide: TitleStrategy, useClass: CustomTitleStrategy },
   ],
 };

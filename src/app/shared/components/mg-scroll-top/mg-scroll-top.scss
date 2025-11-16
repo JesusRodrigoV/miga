@@ -1,0 +1,13 @@
+:host {
+  ::ng-deep .mg-custom-scrolltop {
+    transition:
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+    &:hover {
+      color: #fff;
+      background-color: #000;
+      border-color: #000;
+    }
+  }
+}

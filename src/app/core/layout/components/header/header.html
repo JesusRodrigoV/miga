@@ -9,7 +9,7 @@
   <div style="margin-top: 10px">
     @if(userName()){
     <p>👤 {{ userName() }}</p>
-    } @defer(on viewport; prefetch on idle; hydrate on hover){
+    @defer(on viewport; prefetch on idle; hydrate on hover){
     <mg-button
       label="🔓 Cerrar sesión"
       [loading]="isLoading()"
@@ -18,6 +18,9 @@
     />
     }@placeholder{
     <mg-button label="🔓 Cerrar sesión" />
+    } } @else {
+    <mg-button label="Inicio de Sesion" routerLink="/login" [fluid]="false" />
+    <mg-button label="Registrarse" routerLink="/signup" [fluid]="false" />
     }
   </div>
 </nav>

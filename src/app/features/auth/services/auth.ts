@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { supabase } from "@core/supabase.client";
+import { supabase } from "@core/services";
 import {
   AuthResponse,
   SignInWithPasswordCredentials,

@@ -6,7 +6,7 @@ import {
   withMethods,
   withState,
 } from "@ngrx/signals";
-import { supabase } from "../supabase.client";
+import { supabase } from "@core/services";
 import {
   Session,
   SignInWithPasswordCredentials,
