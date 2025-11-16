@@ -1,16 +1,31 @@
-<h2>Ingreso</h2>
+<h2>Registro e Ingreso</h2>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <mg-input
+    label="Nombre"
+    formControlName="nombre"
+    [invalid]="(form.get('nombre')?.invalid && form.get('nombre')?.touched) ?? false"
+  />
+  @if( form.get('nombre')?.invalid && form.get('nombre')?.touched ){
+  <div>Nombre es requerido.</div>
+  }
+
+  <mg-input
+    label="Apellido"
+    formControlName="apellido"
+    [invalid]="(form.get('apellido')?.invalid && form.get('apellido')?.touched) ?? false"
+  />
+  <mg-input
     label="Correo electrónico"
-    formControlName="email"
     type="email"
+    formControlName="email"
     [invalid]="(form.get('email')?.invalid && form.get('email')?.touched) ?? false"
   />
 
   <mg-password
     label="Contraseña"
     formControlName="password"
+    [showMeter]="true"
     [invalid]="(form.get('password')?.invalid && form.get('password')?.touched) ?? false"
   />
   @if(form.get('password')?.invalid && form.get('password')?.touched){
@@ -18,19 +33,19 @@
   }
 
   <mg-button
-    label="Ingresar"
+    label="Crear cuenta e ingresar"
     [loading]="authStore.isLoading()"
     [disabled]="form.invalid"
-    [buttonProps]="{ type: 'submit' }"
     (onClick)="onSubmit()"
     [fluid]="false"
   />
 
   <mg-button
-    label="No tengo una cuenta"
-    routerLink="/registro"
-    severity="secondary"
+    label="Ya tengo cuenta"
+    routerLink="/login"
+    [buttonProps]="{ type: 'button' }"
     [disabled]="authStore.isLoading()"
+    severity="secondary"
     [fluid]="false"
   />
 

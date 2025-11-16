@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import {
-  ReactiveFormsModule,
   FormBuilder,
-  Validators,
   FormGroup,
+  ReactiveFormsModule,
+  Validators,
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthStore } from "@core/stores/auth.store";
@@ -12,13 +12,13 @@ import { MgInput } from "@shared/components/mg-input";
 import { MgPassword } from "@shared/components/mg-password";
 
 @Component({
-  selector: "app-login",
+  selector: "app-signup",
   imports: [ReactiveFormsModule, MgButton, MgPassword, MgInput],
-  templateUrl: "./login.html",
-  styleUrl: "./login.scss",
+  templateUrl: "./signup.html",
+  styleUrl: "./signup.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class Login {
+export default class Signup {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   protected authStore = inject(AuthStore);
@@ -28,6 +28,8 @@ export default class Login {
 
   constructor() {
     this.form = this.fb.group({
+      nombre: ["", Validators.required],
+      apellido: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]],
     });
@@ -37,10 +39,10 @@ export default class Login {
     if (this.form.invalid) return;
 
     this.msg = "";
-    const { email, password } = this.form.value;
+    const { nombre, apellido, email, password } = this.form.value;
 
     try {
-      await this.authStore.login({ email, password });
+      await this.authStore.signup({ email, password }, nombre, apellido);
 
       this.router.navigateByUrl("/planes");
     } catch (error: any) {

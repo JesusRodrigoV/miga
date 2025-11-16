@@ -9,8 +9,15 @@
   <div style="margin-top: 10px">
     @if(userName()){
     <p>👤 {{ userName() }}</p>
+    } @defer(on viewport; prefetch on idle; hydrate on hover){
+    <mg-button
+      label="🔓 Cerrar sesión"
+      [loading]="isLoading()"
+      (click)="logout()"
+      [fluid]="false"
+    />
+    }@placeholder{
+    <mg-button label="🔓 Cerrar sesión" />
     }
-
-    <button (click)="logout()">🔓 Cerrar sesión</button>
   </div>
 </nav>

@@ -59,8 +59,14 @@ export const AuthStore = signalStore(
     },
 
     async login(credentials: SignInWithPasswordCredentials): Promise<void> {
-      await authService.signIn(credentials);
-      await this.loadSession();
+      patchState(store, { isLoading: true });
+      try {
+        await authService.signIn(credentials);
+        await this.loadSession();
+      } catch (error) {
+        patchState(store, { isLoading: false });
+        throw error;
+      }
     },
 
     async signup(
@@ -68,27 +74,42 @@ export const AuthStore = signalStore(
       nombre: string,
       apellido: string,
     ): Promise<void> {
-      const response = await authService.signUp(credentials);
-      const userId = response.data.user?.id;
+      patchState(store, { isLoading: true });
+      try {
+        const response = await authService.signUp(credentials);
+        const userId = response.data.user?.id;
 
-      if (!userId) {
-        throw new Error("No se pudo crear el usuario");
+        if (!userId) {
+          throw new Error("No se pudo crear el usuario");
+        }
+
+        await authService.insertProfile(userId, nombre, apellido);
+
+        const {
+          data: { session },
+        } = await authService.getSession();
+
+        patchState(store, {
+          session,
+          profile: { nombre, apellido },
+          isLoading: false,
+        });
+      } catch (error) {
+        patchState(store, { isLoading: false });
+        throw error;
       }
-
-      await authService.insertProfile(userId, nombre, apellido);
-
-      const {
-        data: { session },
-      } = await authService.getSession();
-      patchState(store, {
-        session,
-        profile: { nombre, apellido },
-      });
     },
 
     async logout() {
-      await authService.signOut();
-      patchState(store, initialState);
+      patchState(store, { isLoading: true });
+
+      try {
+        await authService.signOut();
+      } catch (error) {
+        console.error("Error en el signOut de Supabase:", error);
+      } finally {
+        patchState(store, initialState);
+      }
     },
   })),
 );

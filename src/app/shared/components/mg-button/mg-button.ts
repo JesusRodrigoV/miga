@@ -6,7 +6,7 @@ import {
   output,
 } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { ButtonModule, ButtonSeverity } from "primeng/button";
+import { ButtonModule, ButtonProps, ButtonSeverity } from "primeng/button";
 import { ButtonIconPos, ButtonSize, ButtonVariant } from "./models";
 
 /**
@@ -100,7 +100,11 @@ export class MgButton {
    * @default 'primary' (si `color` no está definido)
    */
   severity = input<ButtonSeverity | null>(null);
-
+  /**
+   * (Opcional) Pasa atributos HTML nativos (como 'type')
+   * directamente al elemento <button> interno.
+   */
+  buttonProps = input<ButtonProps>({});
   /**
    * @internal
    * Valor de severidad computado que se pasa a PrimeNG.

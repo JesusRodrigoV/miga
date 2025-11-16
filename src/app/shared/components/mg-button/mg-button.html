@@ -12,7 +12,10 @@
   [severity]="finalSeverity()"
   [styleClass]="color() ? 'p-button-custom' : undefined"
   [style.--custom-bg]="color()"
-></p-button>
+  [buttonProps]="buttonProps()"
+>
+  <ng-content></ng-content>
+</p-button>
 } @else {
 <p-button
   [label]="label()"
@@ -28,5 +31,8 @@
   [severity]="finalSeverity()"
   [styleClass]="color() ? 'p-button-custom' : undefined"
   [style.--custom-bg]="color()"
-></p-button>
+  [buttonProps]="buttonProps()"
+>
+  <ng-content></ng-content>
+</p-button>
 }

@@ -17,7 +17,7 @@ import { AuthStore } from "@core/stores/auth.store";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class Layout {
-  protected readonly authStore = inject(AuthStore);
+  protected authStore = inject(AuthStore);
   private readonly router = inject(Router);
 
   async ngOnInit() {
