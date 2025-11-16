@@ -1,0 +1,15 @@
+<h2>Parte 3: Costos</h2>
+
+<nav class="mb-4">
+  @for (link of costoLinks; track link.route; let isLast = $last) {
+
+  <a [routerLink]="link.route" routerLinkActive="font-bold">
+    {{ link.label }}
+  </a>
+
+  @if (!isLast) {
+  <span> | </span>
+  } }
+</nav>
+
+<router-outlet></router-outlet>

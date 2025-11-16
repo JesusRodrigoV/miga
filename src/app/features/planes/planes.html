@@ -1,13 +1,36 @@
 <h2>Mis Planes de Negocio</h2>
 
-<button (click)="crearNuevoPlan()">+ Nuevo Plan</button>
+<mg-button
+  icon="pi pi-plus"
+  (onClick)="crearNuevoPlan()"
+  [loading]="isLoading()"
+  [fluid]="false"
+  severity="primary"
+>
+  @if(isLoading()){
+  <mg-loader />
+  } @else{ +Nuevo Plan }
+</mg-button>
 
 <ul>
-  @for(plan of planes; track plan.id){
+  @for (plan of planes(); track plan.id) {
   <li>
-    <strong>{{ plan.estado }}</strong> — creado {{ plan.created_at | date:
-    'shortDate' }}
-    <button (click)="abrir(plan.id)">Abrir</button>
+    <span>
+      <strong>{{ plan.estado }}</strong> — creado {{ plan.created_at | date:
+      'shortDate' }}
+    </span>
+
+    <mg-button
+      label="Abrir"
+      (onClick)="abrir(plan.id)"
+      [fluid]="false"
+      severity="secondary"
+      [size]="size"
+    />
+  </li>
+  } @empty {
+  <li>
+    <p>Aún no tienes ningún plan. ¡Crea uno para comenzar!</p>
   </li>
   }
 </ul>

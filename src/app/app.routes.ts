@@ -34,8 +34,7 @@ export const routes: Routes = [
       {
         path: "costos",
         title: "Costos",
-        loadComponent: () =>
-          import("./features/costos/components/costos/costos"),
+        loadComponent: () => import("./features/costos/costos"),
         canActivate: [authGuard],
         children: [
           {

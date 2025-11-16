@@ -1,9 +1,8 @@
 <nav>
   <ul>
-    <li><a routerLink="/idea">Idea</a></li>
-    <li><a routerLink="/objetivo">Objetivo</a></li>
-    <li><a routerLink="/costos">Costos</a></li>
-    <li><a> Pon en marcha </a></li>
+    @for(link of links; track $index){
+    <li><a routerLink="{{link.route}}">{{link.label}}</a></li>
+    }
   </ul>
 
   <div style="margin-top: 10px">

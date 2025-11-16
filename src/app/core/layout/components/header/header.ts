@@ -18,6 +18,15 @@ export class Header {
   isLoading = input<boolean>(false);
   userName = input<string>("Usuario");
   onLogout = output<void>();
+
+  links = [
+    { label: "Inicio", route: "/inicio" },
+    { label: "Idea", route: "/idea" },
+    { label: "Objetivo", route: "/objetivo" },
+    { label: "Costos", route: "/costos" },
+    { label: "Pon en marcha" },
+  ];
+
   logout() {
     this.onLogout.emit();
   }

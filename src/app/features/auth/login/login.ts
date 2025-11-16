@@ -24,7 +24,6 @@ export default class Login {
   protected authStore = inject(AuthStore);
 
   form: FormGroup;
-  msg = "";
 
   constructor() {
     this.form = this.fb.group({
@@ -36,15 +35,12 @@ export default class Login {
   async onSubmit() {
     if (this.form.invalid) return;
 
-    this.msg = "";
     const { email, password } = this.form.value;
 
     try {
       await this.authStore.login({ email, password });
 
       this.router.navigateByUrl("/planes");
-    } catch (error: any) {
-      this.msg = "❌ " + error.message;
-    }
+    } catch (error: any) {}
   }
 }

@@ -1,38 +1,55 @@
 import { DatePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from "@angular/core";
 import { Router } from "@angular/router";
-import { supabase } from "@core/services";
+import { PlanesService } from "./services";
+import { MgButton } from "@shared/components/mg-button";
+import { ButtonSize } from "@shared/components/mg-button/models";
+import { MgLoader } from "@shared/components/mg-loader";
 
 @Component({
   selector: "app-planes",
-  imports: [DatePipe],
+  imports: [DatePipe, MgButton, MgLoader],
   templateUrl: "./planes.html",
   styleUrl: "./planes.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class Planes {
   private router = inject(Router);
+  private planesService = inject(PlanesService);
+  size = ButtonSize.SMALL;
 
-  planes: any[] = [];
+  planes = signal<any>([]);
+  isLoading = signal<boolean>(false);
 
   async ngOnInit() {
-    const { data, error } = await supabase.from("plans").select("*");
-    this.planes = data || [];
+    this.isLoading.set(true);
+    try {
+      const data = await this.planesService.getPlanes();
+      this.planes.set(data);
+    } catch (error) {
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   async crearNuevoPlan() {
-    const user = await supabase.auth.getUser();
+    this.isLoading.set(true);
+    try {
+      const nuevoPlan = await this.planesService.crearNuevoPlan();
 
-    const { data, error } = await supabase
-      .from("plans")
-      .insert({ user_id: user.data.user?.id, estado: "borrador" })
-      .select()
-      .single();
+      this.planes.update((planesActuales) => [...planesActuales, nuevoPlan]);
 
-    if (data) {
-      this.planes.push(data);
-      // Redirigir automáticamente a la Parte 1
-      this.router.navigate(["/idea"], { queryParams: { planId: data.id } });
+      this.router.navigate(["/idea"], {
+        queryParams: { planId: nuevoPlan.id },
+      });
+    } catch (error) {
+    } finally {
+      this.isLoading.set(false);
     }
   }
 

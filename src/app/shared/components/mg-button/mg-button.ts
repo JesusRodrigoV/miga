@@ -35,7 +35,7 @@ import { ButtonIconPos, ButtonSize, ButtonVariant } from "./models";
 })
 export class MgButton {
   /** El texto a mostrar en el botón. (Propiedad obligatoria) */
-  label = input.required<string>();
+  label = input<string>();
 
   /** El nombre del ícono (ej. 'pi pi-check'). */
   icon = input<string>();
