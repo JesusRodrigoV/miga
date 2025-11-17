@@ -1,18 +1,18 @@
-<p-floatlabel variant="on" [style.width]="fluid() ? '100%' : 'auto'">
-  <input
-    pInputText
+<p-floatlabel variant="on">
+  <textarea
+    pTextarea
     [id]="finalId()"
-    [type]="type()"
+    [rows]="rows()"
     [value]="value()"
     (input)="onValueChange($event)"
     (blur)="handleBlur()"
     [disabled]="disabled()"
     [autocomplete]="autocomplete()"
     placeholder=" "
-    [variant]="variant()"
+    [autoResize]="autoResize()"
     [fluid]="fluid()"
     [invalid]="invalid()"
-  />
+  ></textarea>
 
   <label [for]="finalId()">{{ label() }}</label>
 </p-floatlabel>

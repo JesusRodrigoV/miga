@@ -24,7 +24,7 @@ export class Header {
     { label: "Idea", route: "/idea" },
     { label: "Objetivo", route: "/objetivo" },
     { label: "Costos", route: "/costos" },
-    { label: "Pon en marcha" },
+    { label: "Pon en marcha", route: "/planes" },
   ];
 
   logout() {

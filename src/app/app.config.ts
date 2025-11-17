@@ -20,8 +20,8 @@ import {
 import { provideHttpClient, withFetch } from "@angular/common/http";
 import { providePrimeNG } from "primeng/config";
 import Aura from "@primeuix/themes/aura";
-import { MessageService } from "primeng/api";
 import { CustomTitleStrategy } from "@core/services/custom-title-strategy";
+import { MessageService } from "primeng/api";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,10 +38,10 @@ export const appConfig: ApplicationConfig = {
         preset: Aura,
       },
     }),
+    MessageService,
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideHttpClient(withFetch()),
     provideAnimations(),
-    MessageService,
     { provide: TitleStrategy, useClass: CustomTitleStrategy },
   ],
 };

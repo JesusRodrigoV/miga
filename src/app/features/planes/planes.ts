@@ -3,13 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  signal,
+  OnInit,
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { PlanesService } from "./services";
 import { MgButton } from "@shared/components/mg-button";
 import { ButtonSize } from "@shared/components/mg-button/models";
 import { MgLoader } from "@shared/components/mg-loader";
+import { PlanesStore } from "./stores";
 
 @Component({
   selector: "app-planes",
@@ -17,39 +17,30 @@ import { MgLoader } from "@shared/components/mg-loader";
   templateUrl: "./planes.html",
   styleUrl: "./planes.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [PlanesStore],
 })
-export default class Planes {
+export default class Planes implements OnInit {
   private router = inject(Router);
-  private planesService = inject(PlanesService);
+  protected planesStore = inject(PlanesStore);
   size = ButtonSize.SMALL;
 
-  planes = signal<any>([]);
-  isLoading = signal<boolean>(false);
-
   async ngOnInit() {
-    this.isLoading.set(true);
     try {
-      const data = await this.planesService.getPlanes();
-      this.planes.set(data);
+      await this.planesStore.cargarPlanes();
     } catch (error) {
-    } finally {
-      this.isLoading.set(false);
+      console.error("Error al cargar planes", error);
     }
   }
 
   async crearNuevoPlan() {
-    this.isLoading.set(true);
     try {
-      const nuevoPlan = await this.planesService.crearNuevoPlan();
-
-      this.planes.update((planesActuales) => [...planesActuales, nuevoPlan]);
+      const nuevoPlan = await this.planesStore.crearPlan();
 
       this.router.navigate(["/idea"], {
         queryParams: { planId: nuevoPlan.id },
       });
     } catch (error) {
-    } finally {
-      this.isLoading.set(false);
+      console.error("Error al crear el plan", error);
     }
   }
 

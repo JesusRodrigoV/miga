@@ -12,6 +12,12 @@ const browserDistFolder = join(import.meta.dirname, "../browser");
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+});
+
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.

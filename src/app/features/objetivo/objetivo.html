@@ -1,38 +1,61 @@
 <h2>Parte 2: Planteamiento de Objetivos SMART</h2>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <div>
-    <label>¿Qué se quiere lograr? (Específico)</label><br />
-    <textarea formControlName="que" rows="3"></textarea>
-  </div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mg-textarea
+    label="¿Qué se quiere lograr? (Específico)"
+    formControlName="que"
+    [rows]="3"
+    [invalid]="isInvalid('que')"
+    errorMessage="Este campo es requerido."
+  />
+  <mg-textarea
+    label="¿A quién está dirigido? (Medible)"
+    formControlName="aQuien"
+    [rows]="3"
+    [invalid]="isInvalid('aQuien')"
+    errorMessage="Este campo es requerido."
+  />
+  <mg-textarea
+    label="¿Cuándo se logrará? (Temporal)"
+    formControlName="cuando"
+    [rows]="3"
+    [invalid]="isInvalid('cuando')"
+    errorMessage="Este campo es requerido."
+  />
+  <mg-textarea
+    label="¿Cómo se logrará? (Alcanzable)"
+    formControlName="como"
+    [rows]="3"
+    [invalid]="isInvalid('como')"
+    errorMessage="Este campo es requerido."
+  />
+  <mg-textarea
+    label="¿Dónde se implementará? (Relevante)"
+    formControlName="donde"
+    [rows]="3"
+    [invalid]="isInvalid('donde')"
+    errorMessage="Este campo es requerido."
+  />
 
-  <div>
-    <label>¿A quién está dirigido? (Medible)</label><br />
-    <textarea formControlName="aQuien" rows="3"></textarea>
-  </div>
-
-  <div>
-    <label>¿Cuándo se logrará? (Temporal)</label><br />
-    <textarea formControlName="cuando" rows="3"></textarea>
-  </div>
-
-  <div>
-    <label>¿Cómo se logrará? (Alcanzable)</label><br />
-    <textarea formControlName="como" rows="3"></textarea>
-  </div>
-
-  <div>
-    <label>¿Dónde se implementará? (Relevante)</label><br />
-    <textarea formControlName="donde" rows="3"></textarea>
-  </div>
-
-  <button type="submit" [disabled]="form.invalid">Guardar Objetivo</button>
+  <mg-button
+    (click)="onSubmit()"
+    [disabled]="form.invalid || store.isLoading()"
+    [fluid]="false"
+  >
+    @if(store.isLoading()) {
+    <mg-loader />
+    } @else {
+    <span>Guardar Objetivo</span>
+    }
+  </mg-button>
 </form>
 
-@if (msg) {
-<p>{{ msg }}</p>
-} @if (saved) {
-<button [routerLink]="['/costos']" [queryParams]="{ planId: planId }">
-  Siguiente
-</button>
+@if (store.isSaved()) {
+<mg-button
+  label="Siguiente"
+  [routerLink]="['/costos']"
+  [queryParams]="{ planId: store.planId() }"
+  severity="secondary"
+  [fluid]="false"
+/>
 }

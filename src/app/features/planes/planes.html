@@ -1,19 +1,13 @@
 <h2>Mis Planes de Negocio</h2>
 
-<mg-button
-  icon="pi pi-plus"
-  (onClick)="crearNuevoPlan()"
-  [loading]="isLoading()"
-  [fluid]="false"
-  severity="primary"
->
-  @if(isLoading()){
+<mg-button (onClick)="crearNuevoPlan()" [fluid]="false" severity="primary">
+  @if(planesStore.isLoading()){
   <mg-loader />
-  } @else{ +Nuevo Plan }
+  } @else{ + Nuevo Plan }
 </mg-button>
 
 <ul>
-  @for (plan of planes(); track plan.id) {
+  @for (plan of planesStore.planes(); track plan.id) {
   <li>
     <span>
       <strong>{{ plan.estado }}</strong> — creado {{ plan.created_at | date:
