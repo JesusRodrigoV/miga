@@ -1,1 +1,52 @@
-<p>footer works!</p>
+<footer class="footer">
+  <div class="footer_container">
+    <div class="footer_top">
+      <div class="footer_logos">
+        <ng-container *ngFor="let logo of logos; let i = index">
+          <img [src]="logo.src" [alt]="logo.alt" class="footer_logo" />
+        </ng-container>
+      </div>
+      <div class="footer_links">
+        <div class="footer_links-column">
+          <h3 class="footer_links-title">MIGA</h3>
+          <ul class="footer_links-list">
+            <li *ngFor="let link of links.company; let i = index">
+              <a [href]="link.url" class="footer_link">{{ link.label }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer_links-column">
+          <h3 class="footer_links-title">Legal</h3>
+          <ul class="footer_links-list">
+            <li *ngFor="let link of links.legal; let i = index">
+              <a [href]="link.url" class="footer_link">{{ link.label }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer_links-column">
+          <h3 class="footer_links-title">Síguenos</h3>
+          <ul class="footer_links-list">
+            <li *ngFor="let link of links.social; let i = index">
+              <a
+                [href]="link.url"
+                class="footer_link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer_bottom">
+      <p class="footer_copyright">
+        © {{ currentYear }} MIGA. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>
