@@ -2,15 +2,26 @@
   ::ng-deep .p-button.p-button-custom {
     background: var(--custom-bg);
     border-color: var(--custom-bg);
-    color: #ffffff;
+
+    color: var(--custom-text, #ffffff);
+
     &:hover {
-      background: color-mix(in srgb, var(--custom-bg) 90%, black);
-      border-color: color-mix(in srgb, var(--custom-bg) 90%, black);
+      background: var(
+        --custom-hover-bg,
+        color-mix(in srgb, var(--custom-bg) 90%, black)
+      ) !important;
+
+      border-color: var(
+        --custom-hover-bg,
+        color-mix(in srgb, var(--custom-bg) 90%, black)
+      ) !important;
+
+      color: var(--custom-text-hover, var(--custom-text, #ffffff)) !important;
     }
 
     &:active {
-      background: color-mix(in srgb, var(--custom-bg) 80%, black);
-      border-color: color-mix(in srgb, var(--custom-bg) 80%, black);
+      background: color-mix(in srgb, var(--custom-bg) 80%, black) !important;
+      border-color: color-mix(in srgb, var(--custom-bg) 80%, black) !important;
     }
   }
 }

@@ -94,12 +94,28 @@ export class MgButton {
    */
   color = input<string>();
 
+  /**  Color de fondo al hacer HOVER.
+   * Si no se define, se calculará automáticamente oscureciendo el 'color'.
+   */
+  hoverColor = input<string>();
+
+  /** Color del texto normal.
+   * @default '#ffffff'
+   */
+  textColor = input<string>();
+
+  /** Color del texto al hacer hover.
+   * Si no se define, usará el mismo que 'textColor'.
+   */
+  textHoverColor = input<string>();
+
   /**
    * Severidad (color) predefinida de PrimeNG.
    * Se ignora si se provee la propiedad `color`.
    * @default 'primary' (si `color` no está definido)
    */
   severity = input<ButtonSeverity | null>(null);
+
   /**
    * (Opcional) Pasa atributos HTML nativos (como 'type')
    * directamente al elemento <button> interno.
