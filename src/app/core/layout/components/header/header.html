@@ -1,25 +1,121 @@
-<nav>
-  <ul>
-    @for(link of links; track $index){
-    <li><a routerLink="{{link.route}}">{{link.label}}</a></li>
-    }
-  </ul>
+<header class="header">
+  <div class="header_container">
+    <div class="header_logos">
+      <ng-container *ngFor="let logo of logos; let i = index">
+        <img [src]="logo.src" [alt]="logo.alt" class="header_logo" />
+      </ng-container>
+    </div>
 
-  <div style="margin-top: 10px">
-    @if(userName()){
-    <p>👤 {{ userName() }}</p>
-    @defer(on viewport; prefetch on idle; hydrate on hover){
-    <mg-button
-      label="🔓 Cerrar sesión"
-      [loading]="isLoading()"
-      (click)="logout()"
-      [fluid]="false"
-    />
-    }@placeholder{
-    <mg-button label="🔓 Cerrar sesión" />
-    } } @else {
-    <mg-button label="Inicio de Sesion" routerLink="/login" [fluid]="false" />
-    <mg-button label="Registrarse" routerLink="/signup" [fluid]="false" />
+    @if(userName()) {
+      <nav class="header_nav header_nav--desktop">
+        <ul class="header_nav-list">
+          <li class="header_nav-item" *ngFor="let link of links; let i = index">
+          <a [routerLink]="link.route" class="header_nav-link">
+            {{ link.label }}
+          </a>
+        </li>
+        </ul>
+      </nav>
     }
+
+    <div class="header_actions">
+      @if(userName()) {
+        <div class="header_user">
+          <ion-icon name="person" class="header_user-icon"></ion-icon>
+          <span class="header_user-name">{{ userName() }}</span>
+        </div>
+
+        @defer(on viewport; prefetch on idle; hydrate on hover) {
+          <mg-button
+            label="Cerrar sesión"
+            [loading]="isLoading()"
+            (click)="logout()"
+            [fluid]="false"
+            color="#39551C"
+            class="header_logout-btn"
+          />
+        } @placeholder {
+          <mg-button
+            label="Cerrar sesión"
+            [fluid]="false"
+            color="#39551C" />
+        }
+
+        <button
+          class="header_menu-toggle"
+          (click)="toggleMenu()"
+          [attr.aria-expanded]="isMenuOpen"
+          aria-label="Toggle menu"
+        >
+          <ion-icon
+            [name]="isMenuOpen ? 'close-outline' : 'menu-outline'"
+            class="header_menu-icon-ion">
+          </ion-icon>
+        </button>
+      } @else {
+        <div class="header_auth-buttons">
+          <mg-button
+            label="Iniciar sesión"
+            routerLink="/login"
+            [fluid]="false"
+            class="header_auth-btn header_auth-btn--login"
+            color="#39551C"
+          />
+          <mg-button
+            label="Registrarse"
+            routerLink="/signup"
+            [fluid]="false"
+            class="header_auth-btn header_auth-btn--signup"
+            color="#39551C"
+          />
+        </div>
+      }
+    </div>
   </div>
-</nav>
+
+  @if(userName() && isMenuOpen) {
+    <div class="header_overlay" (click)="closeMenu()"></div>
+    <nav class="header_nav header_nav--mobile">
+      <div class="header_mobile-header">
+        <div class="header_mobile-user-info">
+          <div class="header_mobile-avatar">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          <div class="header_mobile-user-details">
+            <span class="header_mobile-greeting">Hola,</span>
+            <span class="header_mobile-user-name">{{ userName() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header_mobile-logos">
+        <ng-container *ngFor="let logo of logos; let i = index">
+          <img [src]="logo.src" [alt]="logo.alt" class="header_mobile-logo" />
+        </ng-container>
+      </div>
+
+      <ul class="header_nav-list">
+        <li class="header_nav-item" *ngFor="let link of links; let i = index">
+          <a
+            [routerLink]="link.route"
+            class="header_nav-link"
+            (click)="closeMenu()"
+          >
+            <span>{{ link.label }}</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="header_mobile-footer">
+        <mg-button
+          label="Cerrar sesión"
+          [loading]="isLoading()"
+          (click)="logout()"
+          [fluid]="true"
+          color="#39551C"
+          class="header_mobile-logout-btn"
+        />
+      </div>
+    </nav>
+  }
+</header>
