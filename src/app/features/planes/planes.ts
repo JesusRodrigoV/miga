@@ -1,4 +1,4 @@
-import { DatePipe } from "@angular/common";
+import { DatePipe, UpperCasePipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,13 +7,12 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { MgButton } from "@shared/components/mg-button";
-import { ButtonSize } from "@shared/components/mg-button/models";
-import { MgLoader } from "@shared/components/mg-loader";
+import { ButtonIconPos, ButtonSize } from "@shared/components/mg-button/models";
 import { PlanesStore } from "./stores";
 
 @Component({
   selector: "app-planes",
-  imports: [DatePipe, MgButton, MgLoader],
+  imports: [DatePipe, UpperCasePipe, MgButton],
   templateUrl: "./planes.html",
   styleUrl: "./planes.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +22,7 @@ export default class Planes implements OnInit {
   private router = inject(Router);
   protected planesStore = inject(PlanesStore);
   size = ButtonSize.SMALL;
+  pos = ButtonIconPos.RIGHT;
 
   async ngOnInit() {
     try {

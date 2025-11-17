@@ -16,6 +16,7 @@
         "@primeuix/themes": "^1.2.5",
         "@supabase/supabase-js": "^2.81.1",
         "express": "^5.1.0",
+        "primeicons": "^7.0.0",
         "primeng": "^20.3.0",
         "rxjs": "~7.8.0",
         "supabase": "^2.58.5",
@@ -977,6 +978,8 @@
     "postcss-media-query-parser": ["postcss-media-query-parser@0.2.3", "", {}, "sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig=="],
 
     "prettier": ["prettier@3.6.2", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ=="],
+
+    "primeicons": ["primeicons@7.0.0", "", {}, "sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw=="],
 
     "primeng": ["primeng@20.3.0", "", { "dependencies": { "@primeuix/styled": "^0.7.4", "@primeuix/styles": "^1.2.5", "@primeuix/utils": "^0.6.2", "tslib": "^2.3.0" }, "peerDependencies": { "@angular/animations": "^20.0.4", "@angular/cdk": "^20.0.3", "@angular/common": "^20.0.4", "@angular/core": "^20.0.4", "@angular/forms": "^20.0.4", "@angular/platform-browser": "^20.0.4", "@angular/router": "^20.0.4", "rxjs": "^6.0.0 || ^7.8.1" } }, "sha512-ljRRundjAfhR6PC75T3uDpg+v3IpBdbAyAlM0kMCHP5H0gtWUang68dd0ibO67/6CAKEcXVxwUnbqy2D6et4jA=="],
 

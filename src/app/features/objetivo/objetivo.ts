@@ -16,10 +16,11 @@ import { ObjetivoStore } from "./stores";
 import { MgLoader } from "@shared/components/mg-loader";
 import { MgButton } from "@shared/components/mg-button";
 import { MgTextarea } from "@shared/components/mg-textarea";
+import { ButtonIconPos } from "@shared/components/mg-button/models";
 
 @Component({
   selector: "app-objetivo",
-  imports: [ReactiveFormsModule, RouterLink, MgLoader, MgButton, MgTextarea],
+  imports: [ReactiveFormsModule, RouterLink, MgButton, MgTextarea],
   templateUrl: "./objetivo.html",
   styleUrl: "./objetivo.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,7 @@ import { MgTextarea } from "@shared/components/mg-textarea";
 })
 export default class Objetivo implements OnInit {
   form: FormGroup;
+  pos = ButtonIconPos.RIGHT;
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);

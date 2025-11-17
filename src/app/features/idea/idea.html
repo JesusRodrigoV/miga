@@ -1,73 +1,85 @@
-<h2>Parte 1: Idea de Negocio</h2>
-
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <mg-textarea
-    label="Fortalezas"
-    formControlName="fortalezas"
-    [rows]="3"
-    [invalid]="isInvalid('fortalezas')"
-    errorMessage="Fortalezas son requeridas."
-  />
-
-  <mg-textarea
-    label="Oportunidades"
-    formControlName="oportunidades"
-    [rows]="3"
-    [invalid]="isInvalid('oportunidades')"
-    errorMessage="Oportunidades son requeridas."
-  />
-
-  <mg-textarea
-    label="Idea de negocio"
-    formControlName="ideaNegocio"
-    [rows]="3"
-    [invalid]="isInvalid('ideaNegocio')"
-    errorMessage="La idea de negocio es requerida."
-  />
-
-  <mg-input
-    label="Nombre del negocio"
-    formControlName="nombreNegocio"
-    type="text"
-    [invalid]="isInvalid('nombreNegocio')"
-    errorMessage="El nombre del negocio es requerido."
-  />
-
-  <mg-textarea
-    label="Propuesta de valor"
-    formControlName="propuestaValor"
-    [rows]="3"
-    [invalid]="isInvalid('propuestaValor')"
-    errorMessage="La propuesta de valor es requerida."
-  />
-
-  <mg-textarea
-    label="Motivación"
-    formControlName="motivacion"
-    [rows]="3"
-    [invalid]="isInvalid('motivacion')"
-    errorMessage="La motivación es requerida."
-  />
-
-  <mg-button
-    (click)="onSubmit()"
-    [disabled]="form.invalid || store.isLoading()"
-    [fluid]="false"
-  >
-    @if(store.isLoading()) {
-    <mg-loader />
-    } @else {
-    <span>Guardar</span>
-    }
-  </mg-button>
-</form>
-
-@if (store.isSaved()) {
-<mg-button
-  label="👉 Siguiente: Objetivo SMART →"
-  [routerLink]="['/objetivo']"
-  [queryParams]="{ planId: store.planId() }"
-  severity="secondary"
-  [fluid]="false"
-/>
-}
+<div class="idea-container">
+  <div class="header">
+    <h2>Parte 1: Idea de Negocio</h2>
+    <p class="subtitle">
+      Analiza y define los pilares fundamentales de tu futuro emprendimiento.
+    </p>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="idea-form">
+    <div class="form-fields">
+      <mg-textarea
+        label="Fortalezas"
+        formControlName="fortalezas"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('fortalezas')"
+        errorMessage="Las fortalezas son requeridas."
+      />
+      <mg-textarea
+        label="Oportunidades"
+        formControlName="oportunidades"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('oportunidades')"
+        errorMessage="Las oportunidades son requeridas."
+      />
+      <mg-textarea
+        label="Idea de negocio"
+        formControlName="ideaNegocio"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('ideaNegocio')"
+        errorMessage="La idea de negocio es requerida."
+      />
+      <mg-input
+        label="Nombre del negocio"
+        formControlName="nombreNegocio"
+        type="text"
+        [fluid]="true"
+        [invalid]="isInvalid('nombreNegocio')"
+        errorMessage="El nombre del negocio es requerido."
+      />
+      <mg-textarea
+        label="Propuesta de valor"
+        formControlName="propuestaValor"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('propuestaValor')"
+        errorMessage="La propuesta de valor es requerida."
+      />
+      <mg-textarea
+        label="Motivación"
+        formControlName="motivacion"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('motivacion')"
+        errorMessage="La motivación es requerida."
+      />
+    </div>
+    <div class="form-actions">
+      <mg-button
+        [buttonProps]="{ type: 'submit' }"
+        [loading]="store.isLoading()"
+        [disabled]="form.invalid || store.isLoading()"
+        [fluid]="false"
+        icon="pi pi-save"
+      >
+        @if(store.isLoading()) {
+        <span>Guardando...</span>
+        } @else {
+        <span>Guardar</span>
+        }
+      </mg-button>
+      @if (store.isSaved()) {
+      <mg-button
+        label="Siguiente"
+        [iconPos]="pos"
+        [routerLink]="['/objetivo']"
+        [queryParams]="{ planId: store.planId() }"
+        severity="secondary"
+        [fluid]="false"
+      />
+      }
+    </div>
+  </form>
+</div>
