@@ -2,6 +2,7 @@ import { DatePipe, UpperCasePipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   inject,
   OnInit,
 } from "@angular/core";
@@ -16,6 +17,7 @@ import { PlanesStore } from "./stores";
   templateUrl: "./planes.html",
   styleUrl: "./planes.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [PlanesStore],
 })
 export default class Planes implements OnInit {

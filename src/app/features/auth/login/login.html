@@ -22,13 +22,12 @@
     [loading]="authStore.isLoading()"
     [disabled]="form.invalid"
     [buttonProps]="{ type: 'submit' }"
-    (onClick)="onSubmit()"
     [fluid]="false"
   />
 
   <mg-button
     label="No tengo una cuenta"
-    routerLink="/registro"
+    routerLink="/signup"
     severity="secondary"
     [disabled]="authStore.isLoading()"
     [fluid]="false"

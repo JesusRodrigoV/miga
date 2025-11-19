@@ -38,12 +38,13 @@
         />
 
         <mg-button
-          icon="pi pi-trash"
           severity="danger"
           (onClick)="eliminar(plan.id)"
           [fluid]="false"
           [size]="size"
-        />
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+        </mg-button>
       </div>
     </li>
     } @empty {

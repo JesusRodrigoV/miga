@@ -1,13 +1,14 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { getSupabase } from "@core/services";
 import { StorageService } from "@core/services/storage-service";
+import { MgButton } from "@shared/components/mg-button";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
   selector: "app-resumen-costos",
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, MgButton],
   templateUrl: "./resumen-costos.html",
   styleUrl: "./resumen-costos.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +30,7 @@ export default class ResumenCostos {
   loading = true;
 
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private storage = inject(StorageService);
   private supabase: SupabaseClient | null = null;
 
@@ -94,5 +96,11 @@ export default class ResumenCostos {
     this.cc = this.totalMO + this.totalCI;
     this.cpcc = this.totalMP + this.totalMO + this.totalCI;
     this.cu = this.cpcc / this.unidades;
+  }
+
+  navigateToPonEnMarcha() {
+    this.router.navigate(["/pon-en-marcha"], {
+      queryParams: { planId: this.planId },
+    });
   }
 }

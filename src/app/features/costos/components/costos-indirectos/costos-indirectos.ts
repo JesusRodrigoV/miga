@@ -5,6 +5,7 @@ import {
   Component,
   inject,
   OnInit,
+  signal,
 } from "@angular/core";
 import {
   FormArray,
@@ -16,11 +17,14 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { getSupabase } from "@core/services";
 import { StorageService } from "@core/services/storage-service";
+import { MgButton } from "@shared/components/mg-button";
+import { MgInput } from "@shared/components/mg-input";
+import { ToastBuilder, ToastService } from "@shared/services/toast";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
   selector: "app-costos-indirectos",
-  imports: [ReactiveFormsModule, DecimalPipe],
+  imports: [ReactiveFormsModule, DecimalPipe, MgButton, MgInput],
   templateUrl: "./costos-indirectos.html",
   styleUrl: "./costos-indirectos.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +32,9 @@ import { SupabaseClient } from "@supabase/supabase-js";
 export default class CostosIndirectos implements OnInit {
   form: FormGroup;
   planId: string | null = null;
-  msg = "";
+
+  isLoading = signal(false);
+
   totalCostoMensual = 0;
   totalCostoPorDia = 0;
   totalCostoPorHora = 0;
@@ -40,6 +46,7 @@ export default class CostosIndirectos implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private storage = inject(StorageService);
+  private toastService = inject(ToastService);
 
   constructor() {
     this.form = this.fb.group({
@@ -91,10 +98,7 @@ export default class CostosIndirectos implements OnInit {
       if (!this.planId) {
         const supabase = await this.getClient();
         const { data, error } = await supabase.rpc("create_or_get_plan");
-        if (error) {
-          this.msg = "Error al obtener el plan";
-          return;
-        }
+        if (error) throw error;
         this.planId = data;
       }
 
@@ -105,6 +109,7 @@ export default class CostosIndirectos implements OnInit {
       await this.loadSection();
       if (this.indirectos.length === 0) this.addIndirecto();
     });
+    this.cdr.detectChanges();
   }
 
   calcularTotales() {
@@ -173,42 +178,56 @@ export default class CostosIndirectos implements OnInit {
   }
 
   async onSubmit() {
-    if (!this.planId || this.form.invalid) return;
-    const supabase = await this.getClient();
-    const { error: sectionError } = await supabase.from("sections").upsert(
-      {
-        plan_id: this.planId,
-        tipo: "costos-indirectos",
-        inputs_json: this.form.getRawValue(),
-        outputs_json: {
-          totalCostoIndirecto: this.totalCostoNeto,
+    if (!this.planId) return;
+
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      this.toastService.show(
+        new ToastBuilder("Por favor, completa los campos requeridos")
+          .deAdvertencia()
+          .build(),
+      );
+      return;
+    }
+
+    this.isLoading.set(true);
+
+    try {
+      const supabase = await this.getClient();
+
+      const { error: sectionError } = await supabase.from("sections").upsert(
+        {
+          plan_id: this.planId,
+          tipo: "costos-indirectos",
+          inputs_json: this.form.getRawValue(),
+          outputs_json: { totalCostoIndirecto: this.totalCostoNeto },
+          updated_at: new Date().toISOString(),
         },
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "plan_id,tipo" },
-    );
+        { onConflict: "plan_id,tipo" },
+      );
 
-    if (sectionError) {
-      this.msg = "❌ Error al guardar";
-    } else {
-      return;
-    }
+      if (sectionError) throw sectionError;
 
-    const { error: planError } = await supabase
-      .from("plans")
-      .update({ ultima_seccion: "costos-indirectos" })
-      .eq("id", this.planId);
+      const { error: planError } = await supabase
+        .from("plans")
+        .update({ ultima_seccion: "costos-indirectos" })
+        .eq("id", this.planId);
 
-    if (planError) {
-      this.msg = "❌ Error al guardar sección final";
-      return;
-    }
-    this.msg = "✅ Costos indirectos guardados";
+      if (planError) throw planError;
 
-    setTimeout(() => {
+      this.toastService.show(
+        new ToastBuilder("Costos indirectos guardados").deExito().build(),
+      );
+
       this.router.navigate(["/costos/resumen"], {
         queryParams: { planId: this.planId },
       });
-    }, 500);
+    } catch (error: any) {
+      this.toastService.show(
+        new ToastBuilder(error.message || "Error al guardar").deError().build(),
+      );
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 }

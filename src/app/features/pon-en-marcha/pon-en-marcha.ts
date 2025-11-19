@@ -1,113 +1,59 @@
-import { NgClass } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnInit,
 } from "@angular/core";
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
-import { getSupabase } from "@core/services";
-import { StorageService } from "@core/services/storage-service";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ActivatedRoute, RouterLink } from "@angular/router";
+import { PonEnMarchaStore } from "./stores/pon-en-marcha.store";
+import { MgTextarea } from "@shared/components/mg-textarea";
+import { MgButton } from "@shared/components/mg-button";
+import { MgLoader } from "@shared/components/mg-loader";
 
 @Component({
   selector: "app-pon-en-marcha",
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, RouterLink, MgTextarea, MgButton, MgLoader],
   templateUrl: "./pon-en-marcha.html",
   styleUrl: "./pon-en-marcha.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [PonEnMarchaStore],
 })
 export default class PonEnMarcha implements OnInit {
-  form: FormGroup;
-
-  planId: string | null = null;
-
-  msg = "";
-
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
-  private storage = inject(StorageService);
+  protected store = inject(PonEnMarchaStore);
+
+  form = this.fb.group({
+    aliados: ["", Validators.required],
+    clientes: ["", Validators.required],
+    competencia: ["", Validators.required],
+    puntosDistribucion: ["", Validators.required],
+    mercadeo: ["", Validators.required],
+  });
 
   constructor() {
-    this.form = this.fb.group({
-      aliados: ["", Validators.required],
-      clientes: ["", Validators.required],
-      competencia: ["", Validators.required],
-      puntosDistribucion: ["", Validators.required],
-      mercadeo: ["", Validators.required],
+    effect(() => {
+      if (this.store.initialData()) {
+        this.form.patchValue(this.store.initialData(), { emitEvent: false });
+      }
     });
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(async (params) => {
-      this.planId = params["planId"] || null;
-
-      if (!this.planId) {
-        const supabase = await getSupabase();
-        const { data, error } = await supabase.rpc("create_or_get_plan");
-
-        if (error) {
-          this.msg = "❌ Error al obtener el plan";
-          return;
-        }
-        this.planId = data;
-      }
-
-      this.storage.getItem("currentPlanId");
-
-      await this.loadSection();
-    });
+    this.route.queryParams.subscribe((p) => this.store.load(p["planId"]));
   }
 
-  async loadSection() {
-    const supabase = await getSupabase();
-    const { data } = await supabase
-      .from("sections")
-      .select("*")
-      .eq("plan_id", this.planId)
-      .eq("tipo", "pon-en-marcha")
-      .single();
-
-    if (data && data.inputs_json) {
-      this.form.patchValue(data.inputs_json);
+  onSubmit() {
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      this.store.save(this.form.value);
     }
   }
 
-  async onSubmit() {
-    if (!this.planId || this.form.invalid) return;
-
-    const supabase = await getSupabase();
-    const { error: sectionError } = await supabase.from("sections").upsert(
-      {
-        plan_id: this.planId,
-        tipo: "pon-en-marcha",
-        inputs_json: this.form.getRawValue(),
-        updated_at: new Date().toISOString(),
-      },
-
-      { onConflict: "plan_id,tipo" },
-    );
-
-    if (sectionError) {
-      this.msg = "❌ Error al guardar";
-
-      return;
-    }
-
-    const { error: updateError } = await supabase
-      .from("plans")
-      .update({ ultima_seccion: "pon-en-marcha" })
-      .eq("id", this.planId);
-
-    if (updateError) {
-      this.msg = "✅ Guardado, pero no se actualizó la última sección";
-    } else {
-      this.msg = "✅ ¡Sección guardada exitosamente!";
-    }
+  isInvalid(ctrl: string) {
+    const c = this.form.get(ctrl);
+    return !!(c?.invalid && c?.touched);
   }
 }

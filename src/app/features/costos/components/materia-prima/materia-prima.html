@@ -115,8 +115,9 @@
     💾 Guardar Materia Prima
   </button>
 
+  @if(msg){
+
   <p
-    *ngIf="msg"
     [ngClass]="{
       'text-green-600': msg.includes('✅'),
       'text-red-600': msg.includes('❌')
@@ -125,4 +126,5 @@
   >
     {{ msg }}
   </p>
+  }
 </form>

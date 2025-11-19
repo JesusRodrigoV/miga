@@ -36,7 +36,7 @@
     label="Crear cuenta e ingresar"
     [loading]="authStore.isLoading()"
     [disabled]="form.invalid"
-    (onClick)="onSubmit()"
+    [buttonProps]="{ type: 'submit' }"
     [fluid]="false"
   />
 
