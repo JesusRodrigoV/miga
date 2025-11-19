@@ -67,6 +67,10 @@
       @media (min-width: 1024px) {
         display: none;
       }
+
+      &-auth {
+        justify-content: flex-start;
+      }
     }
   }
 
@@ -89,6 +93,11 @@
     padding: 2rem 1.5rem 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background: linear-gradient(135deg, rgba(57, 85, 28, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+
+    &--auth {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(57, 85, 28, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%);
+    }
   }
 
   &_mobile-logos {
@@ -100,6 +109,12 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(0, 0, 0, 0.2);
     flex-wrap: wrap;
+
+    .header_mobile-header--auth & {
+      padding: 1rem;
+      border-bottom: none;
+      background-color: transparent;
+    }
   }
 
   &_mobile-logo {
@@ -112,6 +127,10 @@
     &:hover {
       transform: scale(1.05);
       opacity: 0.9;
+    }
+
+    .header_mobile-header--auth & {
+      height: 50px;
     }
   }
 
@@ -154,6 +173,38 @@
     font-weight: 600;
     color: var(--white);
     word-break: break-word;
+  }
+
+  &_mobile-auth-section {
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  &_mobile-auth-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0;
+    text-align: center;
+  }
+
+  &_mobile-auth-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  &_mobile-auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
   }
 
   &_nav-list {
@@ -301,6 +352,14 @@
       display: none;
     }
 
+    &--auth {
+      display: none;
+
+      @media (max-width: 1023px) {
+        display: flex;
+      }
+    }
+
     &:hover {
       background-color: rgba(255, 255, 255, 0.1);
       transform: scale(1.05);
@@ -338,6 +397,12 @@
   &_auth-buttons {
     display: flex;
     gap: 0.75rem;
+
+    &--desktop {
+      @media (max-width: 1023px) {
+        display: none;
+      }
+    }
   }
 
   &_auth-btn {

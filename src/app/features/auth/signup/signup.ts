@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthStore } from "@core/stores/auth.store";
 import { MgButton } from "@shared/components/mg-button";
 import { MgInput } from "@shared/components/mg-input";
@@ -13,7 +13,7 @@ import { MgPassword } from "@shared/components/mg-password";
 
 @Component({
   selector: "app-signup",
-  imports: [ReactiveFormsModule, MgButton, MgPassword, MgInput],
+  imports: [ReactiveFormsModule, RouterLink, MgButton, MgPassword, MgInput],
   templateUrl: "./signup.html",
   styleUrl: "./signup.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
