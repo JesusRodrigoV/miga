@@ -4,9 +4,11 @@ import {
   computed,
   input,
   output,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { MgButton } from "@shared/components/mg-button";
+import { CommonModule } from "@angular/common";
 
 interface MenuItem {
   label: string;
@@ -20,21 +22,20 @@ interface MenuItem {
   templateUrl: "./header.html",
   styleUrl: "./header.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Header {
   isLoading = input<boolean>(false);
-  userName = input<string>("Usuario");
+  userName = input<string | null>(null);
   onLogout = output<void>();
+  isMenuOpen = false;
 
   currentPlanId = input<string | null>(null);
 
   links = computed<MenuItem[]>(() => {
     const menu: MenuItem[] = [
       { label: "Inicio", route: ["/inicio"] },
-      { label: "Idea", route: ["/idea"] },
-      { label: "Objetivo", route: ["/objetivo"] },
-      { label: "Costos", route: ["/costos"] },
-      { label: "Pon en marcha", route: ["/pon-en-marcha"] },
+      { label: "Planes", route: ["/planes"] },
     ];
 
     const planId = this.currentPlanId();
@@ -50,7 +51,23 @@ export class Header {
     return menu;
   });
 
+  logos = [
+    { src: "/logo1.png", alt: "Logo 1" },
+    { src: "/logo2.png", alt: "Logo 2" },
+    { src: "/logo3.png", alt: "Logo 3" },
+    { src: "/logo4.png", alt: "Logo 4" },
+  ];
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
+  }
+
   logout() {
     this.onLogout.emit();
+    this.closeMenu();
   }
 }

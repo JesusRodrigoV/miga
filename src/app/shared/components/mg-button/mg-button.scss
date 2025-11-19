@@ -2,9 +2,10 @@
   ::ng-deep .p-button.p-button-custom {
     background: var(--custom-bg);
     border-color: var(--custom-bg);
+    font-family: var(--font-encode-sans);
+    font-size: var(--font-weight-light);
 
-    color: var(--custom-text, #ffffff);
-
+    color: #ffffff;
     &:hover {
       background: var(
         --custom-hover-bg,

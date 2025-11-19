@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Encode+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-encode-sans: "Encode Sans", sans-serif;
+
+  --font-weight-thin: 100;
+  --font-weight-extra-light: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semi-bold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extra-bold: 800;
+  --font-weight-black: 900;
+
+  // primarios
+  --black: #000000;
+  --white: #ffffff;
+
+  // botones
+  --amarillo-tenue: #fde992;
+  --amarillo: #ffd324;
+  --violeta: #714791;
+  --rojo: #ed1e24;
+
+  // Rojo amarillo azul y violeta
+  --rojo-medio: #9f0026;
+  --rojo-tenue: #ca0032;
+  --rojo-oscuro: #5c0017;
+
+  --verde-oscuro: #39541d;
+  --verde-medio: #4c7026;
+  --verde-claro: #39551c;
+
+  // agregar otros aca abajo akdjs
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
