@@ -1,59 +1,106 @@
-<h2>Costos Indirectos</h2>
+<div class="costos-container">
+  <h2>Costos Indirectos</h2>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <div formArrayName="indirectos">
-    @for (ind of indirectos.controls; track ind; let i = $index) {
-    <div [formGroupName]="i" class="border p-4 mb-4">
-      <h4>Item {{ i + 1 }}</h4>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="indirectos-form">
+    <div formArrayName="indirectos" class="items-list">
+      @for (ind of indirectos.controls; track ind; let i = $index) {
 
-      <label>Descripción</label>
-      <input formControlName="descripcion" type="text" />
+      <div [formGroupName]="i" class="item-card">
+        <div class="item-header">
+          <h4>Ítem #{{ i + 1 }}</h4>
+          <mg-button
+            icon="pi pi-trash"
+            severity="danger"
+            [fluid]="false"
+            (onClick)="removeIndirecto(i)"
+          />
+        </div>
 
-      <label>Costo mensual</label>
-      <input formControlName="costoMensual" type="number" />
+        <div class="item-grid">
+          <div class="full-width">
+            <mg-input
+              label="Descripción"
+              formControlName="descripcion"
+              [fluid]="true"
+            />
+          </div>
 
-      <label>Días calculados</label>
-      <input formControlName="diasCalculados" type="number" />
+          <mg-input
+            label="Costo Mensual"
+            formControlName="costoMensual"
+            type="number"
+            [fluid]="true"
+          />
 
-      <label>Costo por día</label>
-      <input formControlName="costoPorDia" type="number" [disabled]="true" />
+          <mg-input
+            label="Días Calc."
+            formControlName="diasCalculados"
+            type="number"
+            [fluid]="true"
+          />
 
-      <label>Costo por hora</label>
-      <input formControlName="costoPorHora" type="number" [disabled]="true" />
+          <mg-input
+            label="Horas Req."
+            formControlName="horasRequeridas"
+            type="number"
+            [fluid]="true"
+          />
 
-      <label>Horas requeridas</label>
-      <input formControlName="horasRequeridas" type="number" />
-
-      <label>Costo neto</label>
-      <input formControlName="costoNeto" type="number" [disabled]="true" />
-
-      <button type="button" (click)="removeIndirecto(i)">Eliminar</button>
+          <mg-input
+            label="Costo/Día"
+            formControlName="costoPorDia"
+            type="number"
+            [fluid]="true"
+          />
+          <mg-input
+            label="Costo/Hora"
+            formControlName="costoPorHora"
+            type="number"
+            [fluid]="true"
+          />
+          <mg-input
+            label="Costo Neto"
+            formControlName="costoNeto"
+            type="number"
+            [fluid]="true"
+          />
+        </div>
+      </div>
+      }
     </div>
-    }
+
+    <div class="actions-bar">
+      <mg-button
+        label="+ Agregar Ítem"
+        severity="secondary"
+        [fluid]="false"
+        [buttonProps]="{ type: 'button' }"
+        (onClick)="addIndirecto()"
+      />
+
+      <mg-button
+        label="Guardar y Continuar"
+        [loading]="isLoading()"
+        [disabled]="form.invalid || isLoading()"
+        [buttonProps]="{ type: 'submit' }"
+        [fluid]="false"
+      />
+    </div>
+  </form>
+
+  <div class="resumen-card">
+    <h3>Resumen de Totales</h3>
+    <div class="resumen-grid">
+      <div class="resumen-item">
+        <span>Total Mensual</span>
+        <strong>{{ totalCostoMensual | number: '1.2-2' }} Bs</strong>
+      </div>
+      <div class="resumen-item">
+        <span>Total Neto</span>
+        <strong class="highlight"
+          >{{ totalCostoNeto | number: '1.2-2' }} Bs</strong
+        >
+      </div>
+    </div>
   </div>
-
-  <button type="button" (click)="addIndirecto()">+ Agregar Item</button>
-  <button type="submit" [disabled]="form.invalid">Guardar</button>
-</form>
-
-@if (msg) {
-<div>{{ msg }}</div>
-}
-
-<h3>Resumen</h3>
-<table>
-  <tr>
-    <th>Total mensual</th>
-    <th>Total por día</th>
-    <th>Total por hora</th>
-    <th>Total horas requeridas</th>
-    <th>Total costo neto</th>
-  </tr>
-  <tr>
-    <td>{{ totalCostoMensual | number: '1.2-2' }}</td>
-    <td>{{ totalCostoPorDia | number: '1.2-2' }}</td>
-    <td>{{ totalCostoPorHora | number: '1.2-2' }}</td>
-    <td>{{ totalHorasRequeridas | number: '1.2-2' }}</td>
-    <td>{{ totalCostoNeto | number: '1.2-2' }}</td>
-  </tr>
-</table>
+</div>

@@ -1,61 +1,73 @@
-<h2>Parte 2: Planteamiento de Objetivos SMART</h2>
-
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <mg-textarea
-    label="¿Qué se quiere lograr? (Específico)"
-    formControlName="que"
-    [rows]="3"
-    [invalid]="isInvalid('que')"
-    errorMessage="Este campo es requerido."
-  />
-  <mg-textarea
-    label="¿A quién está dirigido? (Medible)"
-    formControlName="aQuien"
-    [rows]="3"
-    [invalid]="isInvalid('aQuien')"
-    errorMessage="Este campo es requerido."
-  />
-  <mg-textarea
-    label="¿Cuándo se logrará? (Temporal)"
-    formControlName="cuando"
-    [rows]="3"
-    [invalid]="isInvalid('cuando')"
-    errorMessage="Este campo es requerido."
-  />
-  <mg-textarea
-    label="¿Cómo se logrará? (Alcanzable)"
-    formControlName="como"
-    [rows]="3"
-    [invalid]="isInvalid('como')"
-    errorMessage="Este campo es requerido."
-  />
-  <mg-textarea
-    label="¿Dónde se implementará? (Relevante)"
-    formControlName="donde"
-    [rows]="3"
-    [invalid]="isInvalid('donde')"
-    errorMessage="Este campo es requerido."
-  />
-
-  <mg-button
-    (click)="onSubmit()"
-    [disabled]="form.invalid || store.isLoading()"
-    [fluid]="false"
-  >
-    @if(store.isLoading()) {
-    <mg-loader />
-    } @else {
-    <span>Guardar Objetivo</span>
-    }
-  </mg-button>
-</form>
-
-@if (store.isSaved()) {
-<mg-button
-  label="Siguiente"
-  [routerLink]="['/costos']"
-  [queryParams]="{ planId: store.planId() }"
-  severity="secondary"
-  [fluid]="false"
-/>
-}
+<div class="objetivo-container">
+  <div class="header">
+    <h2>Parte 2: Objetivos SMART</h2>
+    <p class="subtitle">
+      Define metas Específicas, Medibles, Alcanzables, Relevantes y Temporales.
+    </p>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="smart-form">
+    <div class="form-fields">
+      <mg-textarea
+        label="S - ¿Qué se quiere lograr? (Específico)"
+        formControlName="que"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('que')"
+        errorMessage="Este campo es requerido."
+      />
+      <mg-textarea
+        label="M - ¿A quién está dirigido? (Medible)"
+        formControlName="aQuien"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('aQuien')"
+        errorMessage="Este campo es requerido."
+      />
+      <mg-textarea
+        label="A - ¿Cómo se logrará? (Alcanzable)"
+        formControlName="como"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('como')"
+        errorMessage="Este campo es requerido."
+      />
+      <mg-textarea
+        label="R - ¿Dónde se implementará? (Relevante)"
+        formControlName="donde"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('donde')"
+        errorMessage="Este campo es requerido."
+      />
+      <mg-textarea
+        label="T - ¿Cuándo se logrará? (Temporal)"
+        formControlName="cuando"
+        [fluid]="true"
+        [rows]="3"
+        [invalid]="isInvalid('cuando')"
+        errorMessage="Este campo es requerido."
+      />
+    </div>
+    <div class="form-actions">
+      <mg-button
+        [buttonProps]="{ type: 'submit' }"
+        [loading]="store.isLoading()"
+        [disabled]="form.invalid || store.isLoading()"
+        [fluid]="false"
+        label="Guardar Objetivo"
+        icon="pi pi-save"
+      />
+      @if (store.isSaved()) {
+      <mg-button
+        label="Siguiente"
+        icon="pi pi-arrow-right"
+        [iconPos]="pos"
+        [routerLink]="['/costos']"
+        [queryParams]="{ planId: store.planId() }"
+        severity="secondary"
+        [fluid]="false"
+      />
+      }
+    </div>
+  </form>
+</div>

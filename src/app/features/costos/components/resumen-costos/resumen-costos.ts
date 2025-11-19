@@ -1,12 +1,14 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { getSupabase } from "@core/services";
+import { StorageService } from "@core/services/storage-service";
+import { MgButton } from "@shared/components/mg-button";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
   selector: "app-resumen-costos",
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, MgButton],
   templateUrl: "./resumen-costos.html",
   styleUrl: "./resumen-costos.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,9 +27,11 @@ export default class ResumenCostos {
   cu = 0;
 
   msg = "";
+  loading = true;
 
   private route = inject(ActivatedRoute);
-
+  private router = inject(Router);
+  private storage = inject(StorageService);
   private supabase: SupabaseClient | null = null;
 
   private async getClient(): Promise<SupabaseClient> {
@@ -39,19 +43,28 @@ export default class ResumenCostos {
     return this.supabase;
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
-      this.planId = params["planId"] || null;
+      this.planId = params["planId"] || this.storage.getItem("currentPlanId");
       if (!this.planId) {
         this.msg = "❌ Plan no encontrado";
+        this.loading = false;
         return;
       }
 
       try {
         await this.cargarDatos();
-        this.calcularResumen();
+        if (this.totalMP === 0 && this.totalMO === 0 && this.totalCI === 0) {
+          this.msg = "ℹ️ Aún no se han registrado costos suficientes.";
+        } else {
+          this.calcularResumen();
+
+          this.msg = "";
+        }
       } catch (err) {
         this.msg = "❌ Error al obtener los datos";
+      } finally {
+        this.loading = false;
       }
     });
   }
@@ -83,5 +96,11 @@ export default class ResumenCostos {
     this.cc = this.totalMO + this.totalCI;
     this.cpcc = this.totalMP + this.totalMO + this.totalCI;
     this.cu = this.cpcc / this.unidades;
+  }
+
+  navigateToPonEnMarcha() {
+    this.router.navigate(["/pon-en-marcha"], {
+      queryParams: { planId: this.planId },
+    });
   }
 }

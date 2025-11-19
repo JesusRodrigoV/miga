@@ -1,0 +1,14 @@
+<div class="container">
+  <h2>📥 Generar PDF del Plan</h2>
+
+  <p>Aquí puedes descargar el resumen completo de tu plan de negocio.</p>
+
+  <mg-button
+    label="📄 Descargar PDF"
+    (onClick)="store.generar()"
+    [loading]="store.isLoading()"
+    [disabled]="!store.planId() || store.isLoading()"
+    severity="primary"
+    [fluid]="false"
+  />
+</div>

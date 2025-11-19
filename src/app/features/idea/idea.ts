@@ -13,20 +13,13 @@ import {
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { IdeaStore } from "./store";
 import { MgButton } from "@shared/components/mg-button";
-import { MgLoader } from "@shared/components/mg-loader";
 import { MgTextarea } from "@shared/components/mg-textarea";
 import { MgInput } from "@shared/components/mg-input";
+import { ButtonIconPos } from "@shared/components/mg-button/models";
 
 @Component({
   selector: "app-idea",
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    MgButton,
-    MgLoader,
-    MgTextarea,
-    MgInput,
-  ],
+  imports: [ReactiveFormsModule, RouterLink, MgButton, MgTextarea, MgInput],
   templateUrl: "./idea.html",
   styleUrl: "./idea.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +27,7 @@ import { MgInput } from "@shared/components/mg-input";
 })
 export default class Idea {
   form: FormGroup;
+  pos = ButtonIconPos.RIGHT;
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);

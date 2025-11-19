@@ -2,11 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  signal,
+  PLATFORM_ID,
 } from "@angular/core";
 import { Footer, Header } from "./components";
 import { Router, RouterOutlet } from "@angular/router";
 import { AuthStore } from "@core/stores/auth.store";
+import { StorageService } from "@core/services/storage-service";
 
 @Component({
   selector: "app-layout",
@@ -18,9 +19,12 @@ import { AuthStore } from "@core/stores/auth.store";
 export default class Layout {
   protected authStore = inject(AuthStore);
   private readonly router = inject(Router);
+  private storage = inject(StorageService);
+  currentPlanId: string | null = null;
 
   async ngOnInit() {
     await this.authStore.loadSession();
+    this.currentPlanId = this.storage.getItem("currentPlanId");
   }
 
   async handleLogout() {

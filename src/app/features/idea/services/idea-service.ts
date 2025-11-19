@@ -60,4 +60,17 @@ export class IdeaService {
       throw error;
     }
   }
+
+  async updatePlanProgress(planId: string): Promise<void> {
+    const supabase = await this.getClient();
+    const { error } = await supabase
+      .from("plans")
+      .update({ ultima_seccion: "idea" })
+      .eq("id", planId);
+
+    if (error) {
+      console.error("Error al actualizar el progreso del plan", error);
+      throw error;
+    }
+  }
 }

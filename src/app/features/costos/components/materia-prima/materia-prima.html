@@ -115,7 +115,16 @@
     💾 Guardar Materia Prima
   </button>
 
-  @if (msg) {
-  <p>{{ msg }}</p>
+  @if(msg){
+
+  <p
+    [ngClass]="{
+      'text-green-600': msg.includes('✅'),
+      'text-red-600': msg.includes('❌')
+    }"
+    class="text-sm mt-2"
+  >
+    {{ msg }}
+  </p>
   }
 </form>

@@ -1,0 +1,61 @@
+:host {
+  display: block;
+  padding: 2rem 1rem;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.idea-container {
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+
+  .header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+
+    h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.75rem;
+      color: var(--text-color);
+      font-weight: 700;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--text-color-secondary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+.idea-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--surface-border);
+
+    @media (max-width: 600px) {
+      flex-direction: column-reverse;
+    }
+  }
+}
