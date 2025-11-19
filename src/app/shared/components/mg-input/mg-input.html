@@ -1,4 +1,9 @@
-<p-floatlabel variant="on" [style.width]="fluid() ? '100%' : 'auto'">
+<p-floatlabel
+  variant="on"
+  [style.--p-floatlabel-color]="labelColor()"
+  [style.--p-floatlabel-focus-color]="activeLabelColor()"
+  [style.--p-floatlabel-active-color]="activeLabelColor()"
+>
   <input
     pInputText
     [id]="finalId()"

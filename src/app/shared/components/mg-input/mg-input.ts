@@ -82,6 +82,18 @@ export class MgInput implements ControlValueAccessor {
   variant = input<"outlined" | "filled">();
 
   /**
+   * Color del texto del label cuando está en reposo (dentro del input).
+   * (Opcional) Ej: '#666666'
+   */
+  labelColor = input<string>();
+
+  /**
+   * Color del texto del label cuando está activo (flotando arriba) o tiene el foco.
+   * (Opcional) Ej: '#ff0000'
+   */
+  activeLabelColor = input<string>();
+
+  /**
    * Genera un ID único para accesibilidad (conectar <label> con <input>)
    * si no se proveyó uno.
    */

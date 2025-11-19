@@ -84,6 +84,18 @@ export class MgTextarea implements ControlValueAccessor {
   /** Autocompletado del navegador. */
   autocomplete = input<string>("off");
 
+  /**
+   * Color del texto del label cuando está en reposo (dentro del input).
+   * (Opcional) Ej: '#666666'
+   */
+  labelColor = input<string>();
+
+  /**
+   * Color del texto del label cuando está activo (flotando arriba) o tiene el foco.
+   * (Opcional) Ej: '#ff0000'
+   */
+  activeLabelColor = input<string>();
+
   /** Genera un ID único para accesibilidad */
   protected finalId = computed(
     () => this.id() ?? this.label().toLowerCase().replace(/\s/g, "-"),
