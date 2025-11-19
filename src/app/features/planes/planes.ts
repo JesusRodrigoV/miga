@@ -25,26 +25,30 @@ export default class Planes implements OnInit {
   pos = ButtonIconPos.RIGHT;
 
   async ngOnInit() {
-    try {
-      await this.planesStore.cargarPlanes();
-    } catch (error) {
-      console.error("Error al cargar planes", error);
-    }
+    await this.planesStore.cargarPlanes();
   }
 
   async crearNuevoPlan() {
     try {
       const nuevoPlan = await this.planesStore.crearPlan();
-
       this.router.navigate(["/idea"], {
         queryParams: { planId: nuevoPlan.id },
       });
-    } catch (error) {
-      console.error("Error al crear el plan", error);
-    }
+    } catch (error) {}
   }
 
-  abrir(planId: string) {
-    this.router.navigate(["/idea"], { queryParams: { planId } });
+  async abrir(planId: string) {
+    const rutaDestino = await this.planesStore.obtenerRutaContinuar(planId);
+
+    this.router.navigate([rutaDestino], {
+      queryParams: { planId },
+    });
+  }
+
+  async eliminar(planId: string) {
+    const confirmado = confirm("¿Estás seguro de eliminar este plan?");
+    if (confirmado) {
+      await this.planesStore.eliminarPlan(planId);
+    }
   }
 }

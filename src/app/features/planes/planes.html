@@ -1,6 +1,7 @@
 <div class="planes-container">
   <div class="header-section">
     <h2>Mis Planes de Negocio</h2>
+
     <mg-button
       label="+ Nuevo Plan"
       (onClick)="crearNuevoPlan()"
@@ -9,6 +10,7 @@
       severity="primary"
     />
   </div>
+
   <ul class="plan-list">
     @for (plan of planesStore.planes(); track plan.id) {
     <li class="plan-card">
@@ -17,18 +19,29 @@
           {{ plan.estado | uppercase }}
         </span>
         <span class="date-info">
-          <i class="pi pi-calendar"></i>
+          <i class="pi pi-calendar" style="margin-right: 5px"></i>
           Creado el {{ plan.created_at | date: 'dd MMM, yyyy' }}
         </span>
+        <!-- Opcional: Mostrar ID para debug -->
+        <small style="color: #999; font-size: 0.8em"
+          >ID: {{ plan.id.slice(0,8) }}...</small
+        >
       </div>
-      <div class="plan-actions">
+
+      <div class="plan-actions" style="display: flex; gap: 0.5rem">
         <mg-button
-          label="Abrir"
-          icon="pi pi-arrow-right"
-          [iconPos]="pos"
+          label="Continuar"
           (onClick)="abrir(plan.id)"
           [fluid]="false"
           severity="secondary"
+          [size]="size"
+        />
+
+        <mg-button
+          icon="pi pi-trash"
+          severity="danger"
+          (onClick)="eliminar(plan.id)"
+          [fluid]="false"
           [size]="size"
         />
       </div>
@@ -40,7 +53,6 @@
         style="font-size: 2rem; margin-bottom: 1rem"
       ></i>
       <p>Aún no tienes ningún plan.</p>
-      <small>¡Crea tu primer plan para comenzar tu emprendimiento!</small>
     </li>
     }
   </ul>

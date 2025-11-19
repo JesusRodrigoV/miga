@@ -32,6 +32,16 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: "generar-pdf",
+        title: "Generar PDF",
+        loadComponent: () => import("./features/generar-pdf/generar-pdf"),
+        canActivate: [authGuard],
+      },
+      {
+        path: "pon-en-marcha",
+        loadComponent: () => import("./features/pon-en-marcha/pon-en-marcha"),
+      },
+      {
         path: "costos",
         title: "Costos",
         loadComponent: () => import("./features/costos/costos"),

@@ -41,7 +41,7 @@ export class ObjetivoService {
       .from("sections")
       .select("inputs_json")
       .eq("plan_id", planId)
-      .eq("tipo", "objetivo")
+      .eq("tipo", "objetivos")
       .single();
 
     return data?.inputs_json || null;
@@ -66,6 +66,19 @@ export class ObjetivoService {
 
     if (error) {
       console.error("Error al guardar", error);
+      throw error;
+    }
+  }
+
+  async updatePlanProgress(planId: string): Promise<void> {
+    const supabase = await this.getClient();
+    const { error } = await supabase
+      .from("plans")
+      .update({ ultima_seccion: "objetivo" })
+      .eq("id", planId);
+
+    if (error) {
+      console.error("Error al actualizar ultima_seccion", error);
       throw error;
     }
   }

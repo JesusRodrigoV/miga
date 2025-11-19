@@ -2,6 +2,7 @@ import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { getSupabase } from "@core/services";
+import { StorageService } from "@core/services/storage-service";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
@@ -25,9 +26,10 @@ export default class ResumenCostos {
   cu = 0;
 
   msg = "";
+  loading = true;
 
   private route = inject(ActivatedRoute);
-
+  private storage = inject(StorageService);
   private supabase: SupabaseClient | null = null;
 
   private async getClient(): Promise<SupabaseClient> {
@@ -39,19 +41,28 @@ export default class ResumenCostos {
     return this.supabase;
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
-      this.planId = params["planId"] || null;
+      this.planId = params["planId"] || this.storage.getItem("currentPlanId");
       if (!this.planId) {
         this.msg = "❌ Plan no encontrado";
+        this.loading = false;
         return;
       }
 
       try {
         await this.cargarDatos();
-        this.calcularResumen();
+        if (this.totalMP === 0 && this.totalMO === 0 && this.totalCI === 0) {
+          this.msg = "ℹ️ Aún no se han registrado costos suficientes.";
+        } else {
+          this.calcularResumen();
+
+          this.msg = "";
+        }
       } catch (err) {
         this.msg = "❌ Error al obtener los datos";
+      } finally {
+        this.loading = false;
       }
     });
   }
