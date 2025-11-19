@@ -1,1 +1,219 @@
-<p>home works!</p>
+<div class="home-container">
+
+  <!-- PRIMERA SECCION-->
+  <section class="hero-section">
+    <div class="hero-background">
+      <div class="hero-circle circle-1"></div>
+      <div class="hero-circle circle-2"></div>
+      <div class="hero-circle circle-3"></div>
+      <div class="hero-gradient-orb orb-1"></div>
+      <div class="hero-gradient-orb orb-2"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title animate-in">
+          Dale vida a <br/>
+          <span class="highlight">
+            <span class="highlight-text">TU SUEÑO</span>
+            <span class="highlight-glow"></span>
+          </span>
+        </h1>
+        <p class="hero-subtitle animate-in-delay">
+          Aprender a crear un plan de negocios práctico para organizar y hacer crecer tú emprendimiento.
+        </p>
+        <div class="hero-actions animate-in-delay-2">
+          <mg-button
+            label="Empezar Mi Proyecto"
+            icon="pi pi-arrow-right"
+            [routerLink]="'/login'"
+            [color]="'var(--amarillo)'"
+            [rounded]="true"
+            [fluid]="false"
+          />
+        </div>
+      </div>
+
+      <div class="hero-visual animate-in-right">
+        <div class="hero-image-container">
+          <div class="image-glow"></div>
+          <img src="/emprendedora.jpg" alt="Emprendedora trabajando en su proyecto" />
+          <div class="image-overlay"></div>
+        </div>
+        <div class="floating-element element-1">
+          <div class="element-glow"></div>
+          <ion-icon name="bulb"></ion-icon>
+          <span>Ideas</span>
+        </div>
+        <div class="floating-element element-2">
+          <div class="element-glow"></div>
+          <ion-icon name="heart"></ion-icon>
+          <span>Pasión</span>
+        </div>
+        <div class="floating-element element-3">
+          <div class="element-glow"></div>
+          <ion-icon name="star"></ion-icon>
+          <span>Éxito</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll-indicator">
+      <ion-icon class="scroll-line" name="arrow-down-outline"> ></ion-icon>
+      <span>Descubre más</span>
+    </div>
+  </section>
+
+  <!-- SECCION RESUMEN -->
+
+  <section class="about-section">
+    <div class="about-background">
+      <div class="about-mesh"></div>
+    </div>
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <ion-icon name="document-text"></ion-icon>
+          <span>¿QUÉ ES UN PLAN DE NEGOCIOS?</span>
+        </div>
+        <h2 class="section-title">
+          Tu plan de negocios,<br/>
+          <span class="title-accent">simple y efectivo</span>
+        </h2>
+        <p class="section-description">
+          Sabemos que dar el primer paso puede ser difícil. Por eso creamos una forma
+          sencilla de organizar tus ideas y convertirlas en un plan que funcione. Un plan es importante debido a que organiza tu negocio
+          , te ayuda a ver problemas y oportunidades y reduce riesgos.
+        </p>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-card" *ngFor="let item of businessPlanElements; let i = index" [style.animation-delay.s]="i * 0.1">
+          <div class="benefit-card-glow"></div>
+          <div class="benefit-icon">
+            <div class="icon-background"></div>
+            <ion-icon [name]="item.icon"></ion-icon>
+          </div>
+          <h3 class="benefit-title">{{ item.title }}</h3>
+          <p class="benefit-description">{{ item.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION DE PASOS -->
+
+  <section class="steps-section">
+    <div class="steps-background">
+      <div class="steps-wave"></div>
+      <div class="steps-pattern"></div>
+      <div class="steps-mesh-gradient"></div>
+    </div>
+
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <ion-icon name="footsteps"></ion-icon>
+          <span>Tu Proceso</span>
+        </div>
+        <h2 class="section-title">
+          Tu camino en 4 pasos
+        </h2>
+        <p class="section-description">
+          No necesitas ser experta, solo tener ganas de empezar
+        </p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-item" *ngFor="let step of steps; let i = index">
+          <div class="step-visual">
+            <div class="step-number">
+              <span class="number-text">{{ i + 1 }}</span>
+              <div class="number-ring"></div>
+              <div class="number-glow"></div>
+            </div>
+            <div class="step-icon-wrapper">
+              <div class="icon-glow"></div>
+              <ion-icon [name]="step.icon"></ion-icon>
+            </div>
+          </div>
+          <div class="step-content">
+            <div class="content-glow"></div>
+            <div class="step-header">
+              <h3 class="step-title">{{ step.title }}</h3>
+              <div class="step-badge">Paso {{ i + 1 }}</div>
+            </div>
+            <p class="step-description">{{ step.description }}</p>
+            <ul class="step-list">
+              <li *ngFor="let detail of step.details">
+                <div class="list-icon">
+                  <ion-icon name="checkmark-circle"></ion-icon>
+                </div>
+                <span>{{ detail }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION CTA -->
+
+  <section class="cta-section">
+    <div class="cta-container">
+      <div class="cta-image-side">
+        <div class="cta-image-wrapper">
+          <div class="image-frame-glow"></div>
+          <img src="/migafonos.jpg" alt="Migafonos" />
+        </div>
+        <div class="cta-decoration decoration-1"></div>
+        <div class="cta-decoration decoration-2"></div>
+      </div>
+
+      <div class="cta-content-side">
+        <h2 class="cta-title">
+          Empieza hoy,<br/>
+          <span>crece mañana</span>
+        </h2>
+        <p class="cta-description">
+          No estás sola en este camino. Estamos aquí para ayudarte a organizar
+          tus ideas, planificar tu negocio y alcanzar tus metas.
+        </p>
+
+        <div class="cta-features">
+          <div class="cta-feature">
+            <div class="feature-icon">
+              <div class="icon-shine"></div>
+              <ion-icon name="gift"></ion-icon>
+            </div>
+            <div class="feature-text">
+              <strong>100% Gratuito</strong>
+              <span>Todas las herramientas sin costo</span>
+            </div>
+          </div>
+          <div class="cta-feature">
+            <div class="feature-icon">
+              <div class="icon-shine"></div>
+              <ion-icon name="sparkles"></ion-icon>
+            </div>
+            <div class="feature-text">
+              <strong>Fácil de Usar</strong>
+              <span>Sin complicaciones ni términos difíciles</span>
+            </div>
+          </div>
+        </div>
+
+        <mg-button
+          label="Comenzar Ahora"
+          [routerLink]="'/login'"
+          icon="pi pi-arrow-right"
+          [color]="'var(--verde-oscuro)'"
+          [rounded]="true"
+          [fluid]="true"
+        />
+      </div>
+    </div>
+  </section>
+
+</div>

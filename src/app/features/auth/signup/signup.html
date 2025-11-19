@@ -15,12 +15,19 @@
     formControlName="apellido"
     [invalid]="(form.get('apellido')?.invalid && form.get('apellido')?.touched) ?? false"
   />
+  @if( form.get('apellido')?.invalid && form.get('apellido')?.touched ){
+  <div>Un apellido es requerido.</div>
+  }
+
   <mg-input
     label="Correo electrónico"
     type="email"
     formControlName="email"
     [invalid]="(form.get('email')?.invalid && form.get('email')?.touched) ?? false"
   />
+  @if( form.get('email')?.invalid && form.get('email')?.touched ){
+  <div>Un correo electrónico es requerido.</div>
+  }
 
   <mg-password
     label="Contraseña"

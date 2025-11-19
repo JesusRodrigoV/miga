@@ -30,7 +30,6 @@ export class Header {
     { label: "Planes", route: "/planes" },
   ];
 
-  // Reemplaza estas URLs con tus imágenes reales
   logos = [
     { src: "/logo1.png", alt: "Logo 1" },
     { src: "/logo2.png", alt: "Logo 2" },
