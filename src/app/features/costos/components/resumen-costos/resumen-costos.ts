@@ -1,7 +1,8 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { supabase } from "@core/services";
+import { getSupabase } from "@core/services";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
   selector: "app-resumen-costos",
@@ -27,6 +28,17 @@ export default class ResumenCostos {
 
   private route = inject(ActivatedRoute);
 
+  private supabase: SupabaseClient | null = null;
+
+  private async getClient(): Promise<SupabaseClient> {
+    if (this.supabase) {
+      return this.supabase;
+    }
+
+    this.supabase = await getSupabase();
+    return this.supabase;
+  }
+
   async ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
       this.planId = params["planId"] || null;
@@ -46,6 +58,7 @@ export default class ResumenCostos {
 
   async cargarDatos() {
     const get = async (tipo: string) => {
+      const supabase = await this.getClient();
       const { data } = await supabase
         .from("sections")
         .select("*")

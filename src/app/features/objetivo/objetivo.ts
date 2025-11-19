@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnInit,
 } from "@angular/core";
@@ -11,24 +12,26 @@ import {
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { supabase } from "@core/services";
+import { ObjetivoStore } from "./stores";
+import { MgLoader } from "@shared/components/mg-loader";
+import { MgButton } from "@shared/components/mg-button";
+import { MgTextarea } from "@shared/components/mg-textarea";
 
 @Component({
   selector: "app-objetivo",
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, MgLoader, MgButton, MgTextarea],
   templateUrl: "./objetivo.html",
   styleUrl: "./objetivo.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ObjetivoStore],
 })
 export default class Objetivo implements OnInit {
   form: FormGroup;
-  msg = "";
-  planId: string | null = null;
-  saved = false;
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  protected readonly store = inject(ObjetivoStore);
 
   constructor() {
     this.form = this.fb.group({
@@ -38,61 +41,43 @@ export default class Objetivo implements OnInit {
       como: ["", Validators.required],
       donde: ["", Validators.required],
     });
-  }
 
-  async ngOnInit() {
-    this.route.queryParams.subscribe(async (params) => {
-      this.planId = params["planId"] || null;
-
-      if (!this.planId) {
-        const { data, error } = await supabase.rpc("create_or_get_plan");
-        if (error) {
-          this.msg = "Error al obtener el plan";
-          return;
-        }
-        this.planId = data;
+    effect(() => {
+      const data = this.store.initialData();
+      if (data) {
+        console.log("Parchando formulario con:", data);
+        this.form.patchValue(data);
       }
-
-      this.loadSection();
     });
   }
 
-  async loadSection() {
-    const { data } = await supabase
-      .from("sections")
-      .select("*")
-      .eq("plan_id", this.planId)
-      .eq("tipo", "objetivo")
-      .single();
-
-    if (data && data.inputs_json) {
-      this.form.patchValue(data.inputs_json);
-    }
+  ngOnInit() {
+    this.route.queryParams.subscribe(async (params) => {
+      const planIdFromRoute = params["planId"] || null;
+      await this.store.loadPageData(planIdFromRoute);
+    });
   }
 
   async onSubmit() {
-    if (!this.planId || this.form.invalid) return;
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
 
-    const { error } = await supabase.from("sections").upsert(
-      {
-        plan_id: this.planId,
-        tipo: "objetivos",
-        inputs_json: this.form.value,
-        outputs_json: {},
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "plan_id,tipo" },
-    );
+    try {
+      await this.store.saveObjetivo(this.form.value);
 
-    if (error) {
-      this.msg = `❌ ${error.message}`;
-      this.saved = false;
-    } else {
-      this.msg = "✅ Objetivos guardados";
-      this.saved = true;
       this.router.navigate(["/costos/materia-prima"], {
-        queryParams: { planId: this.planId },
+        queryParams: { planId: this.store.planId() },
       });
+    } catch (error) {
+      console.error("Fallo al guardar (manejado por el store)");
     }
+  }
+
+  public isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    if (!control) {
+      return false;
+    }
+    return control.invalid && control.touched;
   }
 }

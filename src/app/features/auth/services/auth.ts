@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { supabase } from "@core/services";
+import { getSupabase } from "@core/services";
 import {
   AuthResponse,
   SignInWithPasswordCredentials,
@@ -10,19 +10,24 @@ import {
   providedIn: "root",
 })
 export class Auth {
-  getSession() {
+  async getSession() {
+    const supabase = await getSupabase();
     return supabase.auth.getSession();
   }
-  getProfile(userId: string) {
+
+  async getProfile(userId: string) {
+    const supabase = await getSupabase();
     return supabase
       .from("profiles")
       .select("nombre, apellido")
       .eq("id", userId)
       .single();
   }
+
   async signIn(
     credentials: SignInWithPasswordCredentials,
   ): Promise<AuthResponse> {
+    const supabase = await getSupabase();
     const response = await supabase.auth.signInWithPassword(credentials);
     if (response.error) {
       throw response.error;
@@ -33,6 +38,7 @@ export class Auth {
   async signUp(
     credentials: SignUpWithPasswordCredentials,
   ): Promise<AuthResponse> {
+    const supabase = await getSupabase();
     const response = await supabase.auth.signUp(credentials);
     if (response.error) {
       throw response.error;
@@ -41,6 +47,7 @@ export class Auth {
   }
 
   async insertProfile(id: string, nombre: string, apellido: string) {
+    const supabase = await getSupabase();
     const { error } = await supabase
       .from("profiles")
       .insert([{ id, nombre, apellido }]);
@@ -49,7 +56,8 @@ export class Auth {
     }
   }
 
-  signOut() {
+  async signOut() {
+    const supabase = await getSupabase();
     return supabase.auth.signOut();
   }
 }

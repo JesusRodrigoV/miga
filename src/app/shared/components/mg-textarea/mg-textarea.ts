@@ -12,36 +12,36 @@ import {
   NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { FloatLabelModule } from "primeng/floatlabel";
-import { InputTextModule } from "primeng/inputtext";
 import { MessageModule } from "primeng/message";
+import { TextareaModule } from "primeng/textarea";
 
 /**
- * Wrapper de UI para pInputText, estandarizado para usar Float Label 'on'.
- * Implementa ControlValueAccessor para ser compatible con Reactive Forms.
+ * pTextarea, estandarizado para usar Float Label 'on'.
  *
  * @example
- * <mg-input
- * label="Nombre de Usuario"
- * formControlName="username"
- * [invalid]="form.get('username')?.invalid"
+ * <mg-textarea
+ * label="Descripción"
+ * formControlName="descripcion"
+ * [rows]="5"
+ * [autoResize]="true"
  * />
  */
 @Component({
-  selector: "mg-input",
-  imports: [FormsModule, InputTextModule, FloatLabelModule, MessageModule],
-  templateUrl: "./mg-input.html",
-  styleUrl: "./mg-input.scss",
+  selector: "mg-textarea",
+  imports: [FormsModule, TextareaModule, FloatLabelModule, MessageModule],
+  templateUrl: "./mg-textarea.html",
+  styleUrl: "./mg-textarea.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MgInput),
+      useExisting: forwardRef(() => MgTextarea),
       multi: true,
     },
   ],
 })
-export class MgInput implements ControlValueAccessor {
-  protected value = signal<string | number | null>(null);
+export class MgTextarea implements ControlValueAccessor {
+  protected value = signal<string | null>(null);
   protected disabled = signal<boolean>(false);
   onChange: (value: any) => void = () => {};
   onTouched: () => void = () => {};
@@ -49,12 +49,21 @@ export class MgInput implements ControlValueAccessor {
   /** El texto para el Float Label. (Propiedad obligatoria) */
   label = input.required<string>();
 
-  /** El tipo de input nativo. */
-  type = input<"text" | "email" | "number">("text");
+  /**
+   * Habilita el auto-redimensionamiento vertical.
+   * @default false
+   */
+  autoResize = input<boolean>(false);
 
   /**
-   * Define si el input debe ocupar el 100% del ancho.
-   * @default false
+   * Número de filas visibles.
+   * @default 5
+   */
+  rows = input<number>(5);
+
+  /**
+   * Define si el textarea debe ocupar el 100% del ancho.
+   * @default true
    */
   fluid = input<boolean>(false);
 
@@ -75,12 +84,6 @@ export class MgInput implements ControlValueAccessor {
   /** Autocompletado del navegador. */
   autocomplete = input<string>("off");
 
-  /** Tamaño del input  */
-  size = input<"small" | "large" | null>(null);
-
-  /** Variante visual del input (PrimeNG). */
-  variant = input<"outlined" | "filled">();
-
   /**
    * Color del texto del label cuando está en reposo (dentro del input).
    * (Opcional) Ej: '#666666'
@@ -93,10 +96,7 @@ export class MgInput implements ControlValueAccessor {
    */
   activeLabelColor = input<string>();
 
-  /**
-   * Genera un ID único para accesibilidad (conectar <label> con <input>)
-   * si no se proveyó uno.
-   */
+  /** Genera un ID único para accesibilidad */
   protected finalId = computed(
     () => this.id() ?? this.label().toLowerCase().replace(/\s/g, "-"),
   );
@@ -104,27 +104,21 @@ export class MgInput implements ControlValueAccessor {
   writeValue(value: any): void {
     this.value.set(value);
   }
-
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
-
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-
   setDisabledState(isDisabled: boolean): void {
     this.disabled.set(isDisabled);
   }
 
-  /** Notifica al formulario que el valor ha cambiado */
   protected onValueChange(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLTextAreaElement).value;
     this.value.set(value);
     this.onChange(value);
   }
-
-  /** Notifica al formulario que el control ha sido "tocado" */
   protected handleBlur() {
     this.onTouched();
   }

@@ -4,20 +4,20 @@
   [style.--p-floatlabel-focus-color]="activeLabelColor()"
   [style.--p-floatlabel-active-color]="activeLabelColor()"
 >
-  <input
-    pInputText
+  <textarea
+    pTextarea
     [id]="finalId()"
-    [type]="type()"
+    [rows]="rows()"
     [value]="value()"
     (input)="onValueChange($event)"
     (blur)="handleBlur()"
     [disabled]="disabled()"
     [autocomplete]="autocomplete()"
     placeholder=" "
-    [variant]="variant()"
+    [autoResize]="autoResize()"
     [fluid]="fluid()"
     [invalid]="invalid()"
-  />
+  ></textarea>
 
   <label [for]="finalId()">{{ label() }}</label>
 </p-floatlabel>

@@ -6,12 +6,10 @@ import {
   withMethods,
   withState,
 } from "@ngrx/signals";
-import { supabase } from "@core/services";
 import {
   Session,
   SignInWithPasswordCredentials,
   SignUpWithPasswordCredentials,
-  User,
 } from "@supabase/supabase-js";
 import { Auth } from "@features/auth/services/auth";
 import { ToastBuilder, ToastService } from "@shared/services/toast";

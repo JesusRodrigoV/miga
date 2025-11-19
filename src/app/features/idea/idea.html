@@ -1,47 +1,73 @@
 <h2>Parte 1: Idea de Negocio</h2>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <div>
-    <label>Fortalezas:</label><br />
-    <textarea formControlName="fortalezas" rows="3"></textarea>
-  </div>
+  <mg-textarea
+    label="Fortalezas"
+    formControlName="fortalezas"
+    [rows]="3"
+    [invalid]="isInvalid('fortalezas')"
+    errorMessage="Fortalezas son requeridas."
+  />
 
-  <div>
-    <label>Oportunidades:</label><br />
-    <textarea formControlName="oportunidades" rows="3"></textarea>
-  </div>
+  <mg-textarea
+    label="Oportunidades"
+    formControlName="oportunidades"
+    [rows]="3"
+    [invalid]="isInvalid('oportunidades')"
+    errorMessage="Oportunidades son requeridas."
+  />
 
-  <div>
-    <label>Idea de negocio:</label><br />
-    <textarea formControlName="ideaNegocio" rows="3"></textarea>
-  </div>
+  <mg-textarea
+    label="Idea de negocio"
+    formControlName="ideaNegocio"
+    [rows]="3"
+    [invalid]="isInvalid('ideaNegocio')"
+    errorMessage="La idea de negocio es requerida."
+  />
 
-  <div>
-    <label>Nombre del negocio:</label><br />
-    <input type="text" formControlName="nombreNegocio" />
-  </div>
+  <mg-input
+    label="Nombre del negocio"
+    formControlName="nombreNegocio"
+    type="text"
+    [invalid]="isInvalid('nombreNegocio')"
+    errorMessage="El nombre del negocio es requerido."
+  />
 
-  <div>
-    <label>Propuesta de valor:</label><br />
-    <textarea formControlName="propuestaValor" rows="3"></textarea>
-  </div>
+  <mg-textarea
+    label="Propuesta de valor"
+    formControlName="propuestaValor"
+    [rows]="3"
+    [invalid]="isInvalid('propuestaValor')"
+    errorMessage="La propuesta de valor es requerida."
+  />
 
-  <div>
-    <label>Motivación:</label><br />
-    <textarea formControlName="motivacion" rows="3"></textarea>
-  </div>
+  <mg-textarea
+    label="Motivación"
+    formControlName="motivacion"
+    [rows]="3"
+    [invalid]="isInvalid('motivacion')"
+    errorMessage="La motivación es requerida."
+  />
 
-  <button type="submit" [disabled]="form.invalid">Guardar</button>
-
-  @if (msg) {
-  <p>{{ msg }}</p>
-  } @if (msg === '✅ Guardado con éxito' && planId) {
-  <button [routerLink]="['/objetivo']" [queryParams]="{ planId: planId }">
-    👉 Siguiente: Objetivo SMART →
-  </button>
-  }
+  <mg-button
+    (click)="onSubmit()"
+    [disabled]="form.invalid || store.isLoading()"
+    [fluid]="false"
+  >
+    @if(store.isLoading()) {
+    <mg-loader />
+    } @else {
+    <span>Guardar</span>
+    }
+  </mg-button>
 </form>
 
-@if (msg) {
-<p>{{ msg }}</p>
+@if (store.isSaved()) {
+<mg-button
+  label="👉 Siguiente: Objetivo SMART →"
+  [routerLink]="['/objetivo']"
+  [queryParams]="{ planId: store.planId() }"
+  severity="secondary"
+  [fluid]="false"
+/>
 }

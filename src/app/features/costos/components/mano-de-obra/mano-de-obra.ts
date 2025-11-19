@@ -12,7 +12,8 @@ import {
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { supabase } from "@core/services";
+import { getSupabase } from "@core/services";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
   selector: "app-mano-de-obra",
@@ -42,11 +43,23 @@ export default class ManoDeObra implements OnInit {
     });
   }
 
+  private supabase: SupabaseClient | null = null;
+
+  private async getClient(): Promise<SupabaseClient> {
+    if (this.supabase) {
+      return this.supabase;
+    }
+
+    this.supabase = await getSupabase();
+    return this.supabase;
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
       this.planId = params["planId"] || null;
 
       if (!this.planId) {
+        const supabase = await this.getClient();
         const { data, error } = await supabase.rpc("create_or_get_plan");
         if (error) {
           this.msg = "Error al obtener el plan";
@@ -72,6 +85,7 @@ export default class ManoDeObra implements OnInit {
   }
 
   async loadSection() {
+    const supabase = await this.getClient();
     const { data } = await supabase
       .from("sections")
       .select("*")
@@ -87,7 +101,7 @@ export default class ManoDeObra implements OnInit {
 
   async onSubmit() {
     if (!this.planId || this.form.invalid) return;
-
+    const supabase = await this.getClient();
     const { error } = await supabase.from("sections").upsert(
       {
         plan_id: this.planId,

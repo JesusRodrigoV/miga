@@ -13,6 +13,10 @@
   [styleClass]="color() ? 'p-button-custom' : undefined"
   [style.--custom-bg]="color()"
   [buttonProps]="buttonProps()"
+  [style.--custom-bg]="color()"
+  [style.--custom-hover-bg]="hoverColor()"
+  [style.--custom-text]="textColor()"
+  [style.--custom-text-hover]="textHoverColor()"
 >
   <ng-content></ng-content>
 </p-button>
@@ -32,6 +36,10 @@
   [styleClass]="color() ? 'p-button-custom' : undefined"
   [style.--custom-bg]="color()"
   [buttonProps]="buttonProps()"
+  [style.--custom-bg]="color()"
+  [style.--custom-hover-bg]="hoverColor()"
+  [style.--custom-text]="textColor()"
+  [style.--custom-text-hover]="textHoverColor()"
 >
   <ng-content></ng-content>
 </p-button>
