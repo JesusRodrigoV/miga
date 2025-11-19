@@ -8,7 +8,6 @@ import {
 } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { MgButton } from "@shared/components/mg-button";
-import { CommonModule } from "@angular/common";
 
 interface MenuItem {
   label: string;
@@ -42,7 +41,7 @@ export class Header {
 
     if (planId) {
       menu.push({
-        label: "📄 Generar PDF",
+        label: "Generar PDF",
         route: ["/generar-pdf"],
         queryParams: { planId: planId },
       });

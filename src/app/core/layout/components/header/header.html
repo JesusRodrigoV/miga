@@ -1,17 +1,20 @@
 <header class="header">
   <div class="header_container">
     <div class="header_logos">
-      @for(logo of logos; track $index){
-      <img [src]="logo.src" [alt]="logo.alt" class="header_logo" />
+      @for (logo of logos; track logo.src) {
+        <img [src]="logo.src" [alt]="logo.alt" class="header_logo" />
       }
     </div>
 
     @if(userName()) {
     <nav class="header_nav header_nav--desktop">
       <ul class="header_nav-list">
-        @for(link of links(); track $index){
+        @for(link of links(); track link.label) {
         <li class="header_nav-item">
-          <a [routerLink]="link.route" class="header_nav-link">
+          <a [routerLink]="link.route"
+            [queryParams]="link.queryParams"
+            routerLinkActive="active"
+            class="header_nav-link">
             {{ link.label }}
           </a>
         </li>
@@ -88,9 +91,14 @@
     </div>
   </div>
 
-  @if(userName() && isMenuOpen) {
+  @if(isMenuOpen) {
   <div class="header_overlay" (click)="closeMenu()"></div>
-  <nav class="header_nav header_nav--mobile">
+  <nav
+    id="mobile-menu"
+    class="header_nav header_nav--mobile"
+    [class.header_nav--mobile-auth]="!userName()">
+
+    @if(userName()) {
     <div class="header_mobile-header">
       <div class="header_mobile-user-info">
         <div class="header_mobile-avatar">
@@ -104,19 +112,19 @@
     </div>
 
     <div class="header_mobile-logos">
-      @for(logo of logos; track $index){
+      @for (logo of logos; track logo.src) {
       <img [src]="logo.src" [alt]="logo.alt" class="header_mobile-logo" />
       }
     </div>
 
     <ul class="header_nav-list">
-      @for(link of links(); track $index){
+    @for (link of links(); track link.label) {
       <li class="header_nav-item">
         <a
           [routerLink]="link.route"
-          class="header_nav-link"
+          [queryParams]="link.queryParams"
           (click)="closeMenu()"
-        >
+          class="header_nav-link">
           <span>{{ link.label }}</span>
         </a>
       </li>
@@ -133,17 +141,12 @@
           class="header_mobile-logout-btn"
         />
       </div>
-    </nav>
-  }
-
-  @if(!userName() && isMenuOpen) {
-    <div class="header_overlay" (click)="closeMenu()"></div>
-    <nav class="header_nav header_nav--mobile header_nav--mobile-auth">
+    } @else {
       <div class="header_mobile-header header_mobile-header--auth">
         <div class="header_mobile-logos">
-          <ng-container *ngFor="let logo of logos; let i = index">
+        @for (logo of logos; track logo.src) {
             <img [src]="logo.src" [alt]="logo.alt" class="header_mobile-logo" />
-          </ng-container>
+        }
         </div>
       </div>
 
@@ -172,6 +175,7 @@
           />
         </div>
       </div>
+      }
     </nav>
   }
 </header>
