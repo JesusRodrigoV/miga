@@ -13,6 +13,7 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { getSupabase } from "@core/services";
+import { StorageService } from "@core/services/storage-service";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
@@ -33,6 +34,7 @@ export default class ManoDeObra implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private storage = inject(StorageService);
 
   constructor() {
     this.form = this.fb.group({
@@ -67,6 +69,8 @@ export default class ManoDeObra implements OnInit {
         }
         this.planId = data;
       }
+
+      this.storage.setItem("currentPlanId", this.planId!);
 
       await this.loadSection();
     });
@@ -116,8 +120,20 @@ export default class ManoDeObra implements OnInit {
       { onConflict: "plan_id,tipo" },
     );
 
-    if (error) {
-      this.msg = "❌ Error al guardar";
+    if (!error) {
+      await supabase
+        .from("plans")
+        .update({ ultima_seccion: "mano-obra" })
+        .eq("id", this.planId);
+    }
+
+    const { error: updateError } = await supabase
+      .from("plans")
+      .update({ ultima_seccion: "mano-obra" })
+      .eq("id", this.planId);
+
+    if (updateError) {
+      this.msg = "Guardado pero no se pudo actualizar la sección";
     } else {
       this.msg = "✅ Mano de obra guardada";
       this.router.navigate(["/costos/costos-indirectos"], {

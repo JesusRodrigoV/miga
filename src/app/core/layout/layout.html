@@ -1,6 +1,7 @@
 <mg-header
   [userName]="authStore.nombreCompleto()"
   [isLoading]="authStore.isLoading()"
+  [currentPlanId]="currentPlanId"
   (onLogout)="handleLogout()"
 />
 <router-outlet />

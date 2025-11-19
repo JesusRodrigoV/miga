@@ -1,0 +1,13 @@
+<div class="container">
+  <h2>📥 Generar PDF del Plan</h2>
+  @if(msg){
+  <p class="text-sm mt-2 text-red-600">{{ msg }}</p>
+  }
+
+  <button
+    (click)="generarPDF()"
+    class="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+  >
+    📄 Descargar PDF
+  </button>
+</div>

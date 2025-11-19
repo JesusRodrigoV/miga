@@ -30,7 +30,6 @@ export default class Objetivo implements OnInit {
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
   protected readonly store = inject(ObjetivoStore);
 
   constructor() {
@@ -64,10 +63,6 @@ export default class Objetivo implements OnInit {
 
     try {
       await this.store.saveObjetivo(this.form.value);
-
-      this.router.navigate(["/costos/materia-prima"], {
-        queryParams: { planId: this.store.planId() },
-      });
     } catch (error) {
       console.error("Fallo al guardar (manejado por el store)");
     }

@@ -15,6 +15,7 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { getSupabase } from "@core/services";
+import { StorageService } from "@core/services/storage-service";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
@@ -38,6 +39,7 @@ export default class CostosIndirectos implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private storage = inject(StorageService);
 
   constructor() {
     this.form = this.fb.group({
@@ -95,6 +97,8 @@ export default class CostosIndirectos implements OnInit {
         }
         this.planId = data;
       }
+
+      this.storage.setItem("currentPlanId", this.planId!);
 
       this.cdr.detectChanges();
 
@@ -171,7 +175,7 @@ export default class CostosIndirectos implements OnInit {
   async onSubmit() {
     if (!this.planId || this.form.invalid) return;
     const supabase = await this.getClient();
-    const { error } = await supabase.from("sections").upsert(
+    const { error: sectionError } = await supabase.from("sections").upsert(
       {
         plan_id: this.planId,
         tipo: "costos-indirectos",
@@ -184,13 +188,27 @@ export default class CostosIndirectos implements OnInit {
       { onConflict: "plan_id,tipo" },
     );
 
-    if (error) {
+    if (sectionError) {
       this.msg = "❌ Error al guardar";
     } else {
-      this.msg = "✅ Costos indirectos guardados";
+      return;
+    }
+
+    const { error: planError } = await supabase
+      .from("plans")
+      .update({ ultima_seccion: "costos-indirectos" })
+      .eq("id", this.planId);
+
+    if (planError) {
+      this.msg = "❌ Error al guardar sección final";
+      return;
+    }
+    this.msg = "✅ Costos indirectos guardados";
+
+    setTimeout(() => {
       this.router.navigate(["/costos/resumen"], {
         queryParams: { planId: this.planId },
       });
-    }
+    }, 500);
   }
 }

@@ -1,30 +1,59 @@
-<h2>Mis Planes de Negocio</h2>
-
-<mg-button (onClick)="crearNuevoPlan()" [fluid]="false" severity="primary">
-  @if(planesStore.isLoading()){
-  <mg-loader />
-  } @else{ + Nuevo Plan }
-</mg-button>
-
-<ul>
-  @for (plan of planesStore.planes(); track plan.id) {
-  <li>
-    <span>
-      <strong>{{ plan.estado }}</strong> — creado {{ plan.created_at | date:
-      'shortDate' }}
-    </span>
+<div class="planes-container">
+  <div class="header-section">
+    <h2>Mis Planes de Negocio</h2>
 
     <mg-button
-      label="Abrir"
-      (onClick)="abrir(plan.id)"
+      label="+ Nuevo Plan"
+      (onClick)="crearNuevoPlan()"
+      [loading]="planesStore.isLoading()"
       [fluid]="false"
-      severity="secondary"
-      [size]="size"
+      severity="primary"
     />
-  </li>
-  } @empty {
-  <li>
-    <p>Aún no tienes ningún plan. ¡Crea uno para comenzar!</p>
-  </li>
-  }
-</ul>
+  </div>
+
+  <ul class="plan-list">
+    @for (plan of planesStore.planes(); track plan.id) {
+    <li class="plan-card">
+      <div class="plan-info">
+        <span class="status-badge" [class]="plan.estado">
+          {{ plan.estado | uppercase }}
+        </span>
+        <span class="date-info">
+          <i class="pi pi-calendar" style="margin-right: 5px"></i>
+          Creado el {{ plan.created_at | date: 'dd MMM, yyyy' }}
+        </span>
+        <!-- Opcional: Mostrar ID para debug -->
+        <small style="color: #999; font-size: 0.8em"
+          >ID: {{ plan.id.slice(0,8) }}...</small
+        >
+      </div>
+
+      <div class="plan-actions" style="display: flex; gap: 0.5rem">
+        <mg-button
+          label="Continuar"
+          (onClick)="abrir(plan.id)"
+          [fluid]="false"
+          severity="secondary"
+          [size]="size"
+        />
+
+        <mg-button
+          icon="pi pi-trash"
+          severity="danger"
+          (onClick)="eliminar(plan.id)"
+          [fluid]="false"
+          [size]="size"
+        />
+      </div>
+    </li>
+    } @empty {
+    <li class="empty-state">
+      <i
+        class="pi pi-folder-open"
+        style="font-size: 2rem; margin-bottom: 1rem"
+      ></i>
+      <p>Aún no tienes ningún plan.</p>
+    </li>
+    }
+  </ul>
+</div>

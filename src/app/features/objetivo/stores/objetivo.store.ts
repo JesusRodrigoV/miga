@@ -63,24 +63,46 @@ export const ObjetivoStore = signalStore(
 
         try {
           await service.saveSection(planId, formData);
-          patchState(store, {
-            isLoading: false,
-            isSaved: true,
-          });
-          const config = new ToastBuilder("Objetivos guardados con éxito")
-            .deExito()
-            .build();
-          toastService.show(config);
+
+          try {
+            await service.updatePlanProgress(planId);
+
+            patchState(store, {
+              isLoading: false,
+              isSaved: true,
+            });
+
+            toastService.show(
+              new ToastBuilder("Objetivos guardados con éxito")
+                .deExito()
+                .build(),
+            );
+          } catch (updateError) {
+            console.warn("Falló updatePlanProgress", updateError);
+
+            patchState(store, {
+              isLoading: false,
+              isSaved: true,
+            });
+
+            toastService.show(
+              new ToastBuilder("Guardado, pero no se actualizó el progreso")
+                .deAdvertencia()
+                .build(),
+            );
+          }
         } catch (error: any) {
           patchState(store, {
             isLoading: false,
             isSaved: false,
           });
-          const config = new ToastBuilder(error.message)
-            .deError()
-            .setTitulo("Error al Guardar")
-            .build();
-          toastService.show(config);
+
+          toastService.show(
+            new ToastBuilder(error.message)
+              .deError()
+              .setTitulo("Error al Guardar")
+              .build(),
+          );
           throw error;
         }
       },

@@ -1,6 +1,6 @@
 <nav>
   <ul>
-    @for(link of links; track $index){
+    @for(link of links(); track $index){
     <li><a routerLink="{{link.route}}">{{link.label}}</a></li>
     }
   </ul>

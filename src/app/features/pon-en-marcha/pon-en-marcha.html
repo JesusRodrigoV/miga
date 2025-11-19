@@ -1,0 +1,45 @@
+<h2>Parte 4: ¡Pon en Marcha tu Negocio!</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div>
+    <label>1. Identificación de los aliados:</label><br />
+    <textarea formControlName="aliados" rows="4" cols="60"></textarea>
+  </div>
+
+  <div>
+    <label>2. Identificación de clientes:</label><br />
+    <textarea formControlName="clientes" rows="4" cols="60"></textarea>
+  </div>
+
+  <div>
+    <label>3. Identificación de la competencia:</label><br />
+    <textarea formControlName="competencia" rows="4" cols="60"></textarea>
+  </div>
+
+  <div>
+    <label>4. Puntos de distribución:</label><br />
+    <textarea
+      formControlName="puntosDistribucion"
+      rows="4"
+      cols="60"
+    ></textarea>
+  </div>
+
+  <div>
+    <label>5. Estrategias de mercadeo (promoción o difusión):</label><br />
+    <textarea formControlName="mercadeo" rows="4" cols="60"></textarea>
+  </div>
+
+  @if(msg){
+  <p
+    [ngClass]="{
+    'text-green-600': msg.includes('✅'),
+    'text-red-600': msg.includes('❌')
+  }"
+  >
+    {{ msg }}
+  </p>
+  }
+
+  <button type="submit" [disabled]="form.invalid">💾 Guardar</button>
+</form>
