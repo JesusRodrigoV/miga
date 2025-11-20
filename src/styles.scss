@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Encode+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Encode+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
   --font-montserrat: "Montserrat", sans-serif;
@@ -29,13 +29,19 @@
   --rojo-tenue: #ca0032;
   --rojo-oscuro: #5c0017;
 
-  --verde-oscuro: #39541D;
-  --verde-medio: #4C7026;
-  --verde-claro: #39551C;
+  --verde-oscuro: #39541d;
+  --verde-medio: #4c7026;
+  --verde-claro: #39551c;
   --verde-botones: #024e0e;
 
   // agregar otros aca abajo akdjs
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

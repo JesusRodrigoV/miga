@@ -19,9 +19,9 @@ import {
 } from "@angular/platform-browser";
 import { provideHttpClient, withFetch } from "@angular/common/http";
 import { providePrimeNG } from "primeng/config";
-import Aura from "@primeuix/themes/aura";
 import { CustomTitleStrategy } from "@core/services/custom-title-strategy";
 import { MessageService } from "primeng/api";
+import { MgPreset } from "src/theme";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,7 +35,10 @@ export const appConfig: ApplicationConfig = {
     ),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: MgPreset,
+        options: {
+          darkModeSelector: false,
+        },
       },
     }),
     MessageService,
