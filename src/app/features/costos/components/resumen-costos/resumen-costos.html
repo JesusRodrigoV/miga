@@ -55,6 +55,14 @@
   </tbody>
 </table>
 
+<div class="actions">
+  <mg-button
+    label="Siguiente: Pon en Marcha →"
+    (onClick)="navigateToPonEnMarcha()"
+    [fluid]="false"
+    severity="primary"
+  />
+</div>
 @if (msg) {
 <div class="mt-4 text-red-600 font-semibold">{{ msg }}</div>
 }

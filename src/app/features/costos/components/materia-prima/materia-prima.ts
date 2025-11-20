@@ -1,4 +1,4 @@
-import { DecimalPipe } from "@angular/common";
+import { DecimalPipe, NgClass } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,11 +15,12 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { getSupabase } from "@core/services";
+import { StorageService } from "@core/services/storage-service";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 @Component({
   selector: "app-materia-prima",
-  imports: [ReactiveFormsModule, DecimalPipe],
+  imports: [ReactiveFormsModule, DecimalPipe, NgClass],
   templateUrl: "./materia-prima.html",
   styleUrl: "./materia-prima.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +35,7 @@ export default class MateriaPrima implements OnInit {
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
+  private storage = inject(StorageService);
 
   constructor() {
     this.form = this.fb.group({
@@ -67,6 +69,8 @@ export default class MateriaPrima implements OnInit {
         }
         this.planId = data;
       }
+
+      this.storage.setItem("currentPlanId", this.planId!);
 
       await this.loadSection();
       if (this.ingredientes.length === 0) {
@@ -194,7 +198,7 @@ export default class MateriaPrima implements OnInit {
   async onSubmit() {
     if (!this.planId || this.form.invalid) return;
     const supabase = await this.getClient();
-    const { error } = await supabase.from("sections").upsert(
+    const { error: sectionError } = await supabase.from("sections").upsert(
       {
         plan_id: this.planId,
         tipo: "costos",
@@ -208,6 +212,25 @@ export default class MateriaPrima implements OnInit {
       { onConflict: "plan_id,tipo" },
     );
 
-    this.msg = error ? "❌ Error al guardar" : "✅ Costos guardados";
+    if (sectionError) {
+      this.msg = "❌ Error al guardar";
+      return;
+    }
+
+    this.msg = "✅ Costos guardados con éxito";
+
+    const { error } = await supabase
+      .from("plans")
+      .update({ ultima_seccion: "costos" })
+      .eq("id", this.planId);
+
+    if (!error) {
+      await supabase
+        .from("plans")
+        .update({ ultima_seccion: "costos" })
+        .eq("id", this.planId);
+    } else {
+      this.msg = "✅ Costos guardados";
+    }
   }
 }

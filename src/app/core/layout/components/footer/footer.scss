@@ -1,0 +1,128 @@
+.footer {
+  background-color: var(--black);
+  color: var(--white);
+  border-top: 1px solid var(--verde-medio);
+  margin-top: auto;
+  font-family: var(--font-encode-sans);
+
+  &_container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 2rem;
+
+    @media (max-width: 768px) {
+      padding: 2rem 1.5rem 1.5rem;
+    }
+  }
+
+  &_top {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--verde-oscuro);
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+
+  &_logos {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      justify-content: center;
+    }
+  }
+
+  &_logo {
+    height: 68px;
+    width: auto;
+    object-fit: contain;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      height: 28px;
+    }
+  }
+
+  &_links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      gap: 1.5rem;
+    }
+  }
+
+  &_links-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  &_links-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  &_links-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &_link {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--amarillo);
+    }
+  }
+
+  &_bottom {
+    padding-top: 2rem;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      padding-top: 1.5rem;
+    }
+  }
+
+  &_copyright {
+    font-size: 0.875rem;
+    color: var(--white);
+    margin: 0;
+  }
+}

@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import { signalStore, withState, withMethods, patchState } from "@ngrx/signals";
 import { IdeaService } from "../services";
 import { ToastBuilder, ToastService } from "@shared/services/toast";
+import { StorageService } from "@core/services/storage-service";
 
 type IdeaState = {
   isLoading: boolean;
@@ -20,11 +21,17 @@ const initialState: IdeaState = {
 export const IdeaStore = signalStore(
   withState(initialState),
   withMethods(
-    (store, service = inject(IdeaService), toast = inject(ToastService)) => ({
+    (
+      store,
+      service = inject(IdeaService),
+      toast = inject(ToastService),
+      storage = inject(StorageService),
+    ) => ({
       async loadPageData(planIdFromRoute: string | null) {
         patchState(store, { isLoading: true, isSaved: false });
         try {
           const planId = await service.getOrCreatePlanId(planIdFromRoute);
+          storage.getItem("currentPlanId");
           const data = await service.loadSection(planId);
 
           patchState(store, {
@@ -56,14 +63,32 @@ export const IdeaStore = signalStore(
 
         try {
           await service.saveSection(planId, formData);
-          patchState(store, {
-            isLoading: false,
-            isSaved: true,
-          });
 
-          toast.show(
-            new ToastBuilder("Idea guardada con éxito").deExito().build(),
-          );
+          try {
+            await service.updatePlanProgress(planId);
+
+            patchState(store, {
+              isLoading: false,
+              isSaved: true,
+            });
+
+            toast.show(
+              new ToastBuilder("Idea guardada con éxito").deExito().build(),
+            );
+          } catch (updateError) {
+            console.warn("Falló updatePlanProgress", updateError);
+
+            patchState(store, {
+              isLoading: false,
+              isSaved: true,
+            });
+
+            toast.show(
+              new ToastBuilder("Guardado, pero no se actualizó el progreso")
+                .deAdvertencia()
+                .build(),
+            );
+          }
         } catch (error: any) {
           patchState(store, { isLoading: false, isSaved: false });
 

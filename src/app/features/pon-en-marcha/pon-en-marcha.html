@@ -1,0 +1,78 @@
+<div class="container">
+  <h2>Parte 4: ¡Pon en Marcha tu Negocio!</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+    <mg-textarea
+      label="1. Identificación de los aliados"
+      formControlName="aliados"
+      [rows]="4"
+      [fluid]="true"
+      [invalid]="isInvalid('aliados')"
+      errorMessage="La identificación de aliados es requerida."
+    />
+
+    <mg-textarea
+      label="2. Identificación de clientes"
+      formControlName="clientes"
+      [rows]="4"
+      [fluid]="true"
+      [invalid]="isInvalid('clientes')"
+      errorMessage="La identificación de clientes es requerida."
+    />
+
+    <mg-textarea
+      label="3. Identificación de la competencia"
+      formControlName="competencia"
+      [rows]="4"
+      [fluid]="true"
+      [invalid]="isInvalid('competencia')"
+      errorMessage="La identificación de la competencia es requerida."
+    />
+
+    <mg-textarea
+      label="4. Puntos de distribución"
+      formControlName="puntosDistribucion"
+      [rows]="4"
+      [fluid]="true"
+      [invalid]="isInvalid('puntosDistribucion')"
+      errorMessage="Los puntos de distribución son requeridos."
+    />
+
+    <mg-textarea
+      label="5. Estrategias de mercadeo (promoción o difusión)"
+      formControlName="mercadeo"
+      [rows]="4"
+      [fluid]="true"
+      [invalid]="isInvalid('mercadeo')"
+      errorMessage="Las estrategias de mercadeo son requeridas."
+    />
+
+    <mg-button
+      [buttonProps]="{ type: 'submit' }"
+      [loading]="store.isLoading()"
+      [disabled]="form.invalid || store.isLoading()"
+      [fluid]="false"
+    >
+      @if(store.isLoading()) {
+      <mg-loader />
+      } @else {
+      <span>💾 Finalizar Plan</span>
+      }
+    </mg-button>
+  </form>
+
+  @if (store.isSaved()) {
+  <div class="success-area">
+    <p>¡Felicidades! Has completado tu plan.</p>
+
+    <mg-button
+      label="📄 Generar PDF Final"
+      [routerLink]="['/generar-pdf']"
+      [queryParams]="{ planId: store.planId() }"
+      severity="success"
+      [fluid]="false"
+      icon="pi pi-file-pdf"
+    />
+  </div>
+  }
+</div>

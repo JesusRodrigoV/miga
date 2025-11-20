@@ -1,36 +1,64 @@
-<h2>Ingreso</h2>
+<div class="login-container">
+  <div class="login-left-space">
+    <div class="login-wave wave1"></div>
+    <div class="login-wave wave2"></div>
+    <div class="login-wave wave3"></div>
+    <div class="login-wave wave4"></div>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <mg-input
-    label="Correo electrónico"
-    formControlName="email"
-    type="email"
-    [invalid]="(form.get('email')?.invalid && form.get('email')?.touched) ?? false"
-  />
+    <div class="login-text">MIGA-BOLIVIA</div>
+    <div class="login-slogan">
+      Valorar y promocionar el Patrimonio Alimentario Boliviano partiendo de las cocinas, territorios y actores.
+    </div>
+    <img class="login-image" src="/seniora.png" alt="Illustration" />
+  </div>
 
-  <mg-password
-    label="Contraseña"
-    formControlName="password"
-    [invalid]="(form.get('password')?.invalid && form.get('password')?.touched) ?? false"
-  />
-  @if(form.get('password')?.invalid && form.get('password')?.touched){
-  <div>Contraseña inválida.</div>
-  }
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-title">Ingresa a tu cuenta MIGA</div>
+      <div class="login-subtitle">
+        <span class="login-subtitle-regular">Si quieres volver al Home, </span>
+        <span class="login-subtitle-link" routerLink="/">Regresa</span>
+      </div>
+    </div>
 
-  <mg-button
-    label="Ingresar"
-    [loading]="authStore.isLoading()"
-    [disabled]="form.invalid"
-    [buttonProps]="{ type: 'submit' }"
-    (onClick)="onSubmit()"
-    [fluid]="false"
-  />
+    <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="login-group">
+        <label class="login-label">Correo Electrónico</label>
+        <mg-input
+          label="Correo Electrónico"
+          formControlName="email"
+          type="email"
+          [invalid]="(form.get('email')?.invalid && form.get('email')?.touched) ?? false"
+          [fluid]="true"
+        />
+        @if(form.get('email')?.invalid && form.get('email')?.touched){
+          <div class="error">Email inválido.</div>
+        }
+      </div>
 
-  <mg-button
-    label="No tengo una cuenta"
-    routerLink="/registro"
-    severity="secondary"
-    [disabled]="authStore.isLoading()"
-    [fluid]="false"
-  />
-</form>
+      <div class="login-group">
+        <label class="login-label">Contraseña</label>
+        <mg-password
+          label="Contraseña"
+          formControlName="password"
+          [invalid]="(form.get('password')?.invalid && form.get('password')?.touched) ?? false"
+          [fluid]="true"
+        />
+        @if(form.get('password')?.invalid && form.get('password')?.touched){
+          <div class="error">Contraseña inválida o vacia.</div>
+        }
+
+      </div>
+      <div class="login-forgot" routerLink="/signup">No tienes una cuenta</div>
+      <mg-button
+        class="login-button-wrapper"
+        label="INGRESAR"
+        (onClick)="onSubmit()"
+        [loading]="authStore.isLoading()"
+        [disabled]="form.invalid || authStore.isLoading()"
+        [buttonProps]="{ type: 'submit' }"
+        [fluid]="true"
+      />
+    </form>
+  </div>
+</div>

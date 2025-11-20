@@ -1,55 +1,92 @@
-<h2>Registro e Ingreso</h2>
+<div class="login-container">
+  <div class="login-left-space">
+    <div class="login-wave wave1"></div>
+    <div class="login-wave wave2"></div>
+    <div class="login-wave wave3"></div>
+    <div class="login-wave wave4"></div>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <mg-input
-    label="Nombre"
-    formControlName="nombre"
-    [invalid]="(form.get('nombre')?.invalid && form.get('nombre')?.touched) ?? false"
-  />
-  @if( form.get('nombre')?.invalid && form.get('nombre')?.touched ){
-  <div>Nombre es requerido.</div>
-  }
+    <div class="login-text">MIGA-BOLIVIA</div>
+    <div class="login-slogan">
+      Valorar y promocionar el Patrimonio Alimentario Boliviano partiendo de las cocinas, territorios y actores.
+    </div>
+    <img class="login-image" src="/seniora.png" alt="Illustration" />
+  </div>
 
-  <mg-input
-    label="Apellido"
-    formControlName="apellido"
-    [invalid]="(form.get('apellido')?.invalid && form.get('apellido')?.touched) ?? false"
-  />
-  <mg-input
-    label="Correo electrónico"
-    type="email"
-    formControlName="email"
-    [invalid]="(form.get('email')?.invalid && form.get('email')?.touched) ?? false"
-  />
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-title">Crea una cuenta MIGA</div>
+      <div class="login-subtitle">
+        <span class="login-subtitle-regular">Si quieres volver al Home, </span>
+        <span class="login-subtitle-link" routerLink="/">Regresa</span>
+      </div>
+    </div>
 
-  <mg-password
-    label="Contraseña"
-    formControlName="password"
-    [showMeter]="true"
-    [invalid]="(form.get('password')?.invalid && form.get('password')?.touched) ?? false"
-  />
-  @if(form.get('password')?.invalid && form.get('password')?.touched){
-  <div>Contraseña inválida.</div>
-  }
+    <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="login-group">
+        <label class="login-label">Nombre</label>
+        <mg-input
+          label="Nombre"
+          formControlName="nombre"
+          [invalid]="(form.get('nombre')?.invalid && form.get('nombre')?.touched) ?? false"
+          [fluid]="true"
+        />
+        @if( form.get('nombre')?.invalid && form.get('nombre')?.touched ){
+          <div>Nombre es requerido.</div>
+        }
+      </div>
 
-  <mg-button
-    label="Crear cuenta e ingresar"
-    [loading]="authStore.isLoading()"
-    [disabled]="form.invalid"
-    (onClick)="onSubmit()"
-    [fluid]="false"
-  />
+      <div class="login-group">
+        <label class="login-label">Apellido</label>
+        <mg-input
+          label="Apellido"
+          formControlName="apellido"
+          [invalid]="(form.get('apellido')?.invalid && form.get('apellido')?.touched) ?? false"
+          [fluid]="true"
+        />
+        @if( form.get('apellido')?.invalid && form.get('apellido')?.touched ){
+          <div>Un apellido es requerido.</div>
+        }
+      </div>
 
-  <mg-button
-    label="Ya tengo cuenta"
-    routerLink="/login"
-    [buttonProps]="{ type: 'button' }"
-    [disabled]="authStore.isLoading()"
-    severity="secondary"
-    [fluid]="false"
-  />
+      <div class="login-group">
+        <label class="login-label">Corre Electrónico</label>
+        <mg-input
+        label="Correo electrónico"
+        type="email"
+        formControlName="email"
+        [invalid]="(form.get('email')?.invalid && form.get('email')?.touched) ?? false"
+        [fluid]="true"
+      />
+      @if( form.get('email')?.invalid && form.get('email')?.touched ){
+        <div>Un correo electrónico es requerido.</div>
+      }
+      </div>
 
-  @if(msg){
-  <p>{{ msg }}</p>
-  }
-</form>
+      <div class="login-group">
+        <label class="login-label">Contraseña</label>
+        <mg-password
+          label="Contraseña"
+          formControlName="password"
+          [showMeter]="true"
+          [invalid]="(form.get('password')?.invalid && form.get('password')?.touched) ?? false"
+          [fluid]="true"
+        />
+        @if(form.get('password')?.invalid && form.get('password')?.touched){
+        <div>Contraseña inválida.</div>
+        }
+      </div>
+
+      <div class="login-forgot" routerLink="/login">Ya tengo una cuenta</div>
+
+      <mg-button
+        class="login-button-wrapper"
+        label="Crear cuenta e ingresar"
+        [loading]="authStore.isLoading()"
+        [disabled]="form.invalid"
+        [buttonProps]="{ type: 'submit' }"
+        [fluid]="true"
+      />
+
+    </form>
+  </div>
+</div>

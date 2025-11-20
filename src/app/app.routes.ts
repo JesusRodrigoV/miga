@@ -14,66 +14,76 @@ export const routes: Routes = [
         loadComponent: () => import("./features/home/home"),
       },
       {
-        path: "planes",
-        title: "Planes",
-        loadComponent: () => import("./features/planes/planes"),
-        canActivate: [authGuard],
-      },
-      {
-        path: "idea",
-        title: "Idea",
-        loadComponent: () => import("./features/idea/idea"),
-        canActivate: [authGuard],
-      },
-      {
-        path: "objetivo",
-        title: "Objetivo",
-        loadComponent: () => import("./features/objetivo/objetivo"),
-        canActivate: [authGuard],
-      },
-      {
-        path: "costos",
-        title: "Costos",
-        loadComponent: () => import("./features/costos/costos"),
+        path: "",
         canActivate: [authGuard],
         children: [
           {
-            path: "materia-prima",
-            loadComponent: () =>
-              import(
-                "./features/costos/components/materia-prima/materia-prima"
-              ),
+            path: "planes",
+            title: "Planes",
+            loadComponent: () => import("./features/planes/planes"),
           },
           {
-            path: "mano-de-obra",
-            loadComponent: () =>
-              import("./features/costos/components/mano-de-obra/mano-de-obra"),
+            path: "idea",
+            title: "Idea",
+            loadComponent: () => import("./features/idea/idea"),
           },
           {
-            path: "costos-indirectos",
-            loadComponent: () =>
-              import(
-                "./features/costos/components/costos-indirectos/costos-indirectos"
-              ),
+            path: "objetivo",
+            title: "Objetivo",
+            loadComponent: () => import("./features/objetivo/objetivo"),
           },
           {
-            path: "resumen",
-            loadComponent: () =>
-              import(
-                "./features/costos/components/resumen-costos/resumen-costos"
-              ),
+            path: "generar-pdf",
+            title: "Generar PDF",
+            loadComponent: () => import("./features/generar-pdf/generar-pdf"),
           },
           {
-            path: "",
-            redirectTo: "materia-prima",
-            pathMatch: "full",
+            path: "pon-en-marcha",
+            title: "Pon en Marcha",
+            loadComponent: () =>
+              import("./features/pon-en-marcha/pon-en-marcha"),
+          },
+          {
+            path: "costos",
+            title: "Costos",
+            loadComponent: () => import("./features/costos/costos"),
+            children: [
+              {
+                path: "materia-prima",
+                loadComponent: () =>
+                  import(
+                    "./features/costos/components/materia-prima/materia-prima"
+                  ),
+              },
+              {
+                path: "mano-de-obra",
+                loadComponent: () =>
+                  import(
+                    "./features/costos/components/mano-de-obra/mano-de-obra"
+                  ),
+              },
+              {
+                path: "costos-indirectos",
+                loadComponent: () =>
+                  import(
+                    "./features/costos/components/costos-indirectos/costos-indirectos"
+                  ),
+              },
+              {
+                path: "resumen",
+                loadComponent: () =>
+                  import(
+                    "./features/costos/components/resumen-costos/resumen-costos"
+                  ),
+              },
+              {
+                path: "",
+                redirectTo: "materia-prima",
+                pathMatch: "full",
+              },
+            ],
           },
         ],
-      },
-      {
-        path: "",
-        redirectTo: "inicio",
-        pathMatch: "full",
       },
     ],
   },
@@ -93,6 +103,7 @@ export const routes: Routes = [
       },
     ],
   },
+  { path: "", redirectTo: "inicio", pathMatch: "full" },
   {
     path: "**",
     loadComponent: () => import("./core/errors/not-found/not-found"),

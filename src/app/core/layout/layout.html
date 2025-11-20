@@ -1,7 +1,14 @@
-<mg-header
+<div class="layout">
+  <mg-header
   [userName]="authStore.nombreCompleto()"
   [isLoading]="authStore.isLoading()"
+  [currentPlanId]="currentPlanId"
   (onLogout)="handleLogout()"
-/>
-<router-outlet />
-<mg-footer />
+  />
+
+  <main class="layout__main">
+    <router-outlet />
+  </main>
+
+  <mg-footer />
+</div>

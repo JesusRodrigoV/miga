@@ -1,25 +1,181 @@
-<nav>
-  <ul>
-    @for(link of links; track $index){
-    <li><a routerLink="{{link.route}}">{{link.label}}</a></li>
-    }
-  </ul>
+<header class="header">
+  <div class="header_container">
+    <div class="header_logos">
+      @for (logo of logos; track logo.src) {
+        <img [src]="logo.src" [alt]="logo.alt" class="header_logo" />
+      }
+    </div>
 
-  <div style="margin-top: 10px">
-    @if(userName()){
-    <p>👤 {{ userName() }}</p>
-    @defer(on viewport; prefetch on idle; hydrate on hover){
-    <mg-button
-      label="🔓 Cerrar sesión"
-      [loading]="isLoading()"
-      (click)="logout()"
-      [fluid]="false"
-    />
-    }@placeholder{
-    <mg-button label="🔓 Cerrar sesión" />
-    } } @else {
-    <mg-button label="Inicio de Sesion" routerLink="/login" [fluid]="false" />
-    <mg-button label="Registrarse" routerLink="/signup" [fluid]="false" />
+    @if(userName()) {
+    <nav class="header_nav header_nav--desktop">
+      <ul class="header_nav-list">
+        @for(link of links(); track link.label) {
+        <li class="header_nav-item">
+          <a [routerLink]="link.route"
+            [queryParams]="link.queryParams"
+            routerLinkActive="active"
+            class="header_nav-link">
+            {{ link.label }}
+          </a>
+        </li>
+        }
+      </ul>
+    </nav>
     }
+
+    <div class="header_actions">
+      @if(userName()) {
+      <div class="header_user">
+        <ion-icon name="person" class="header_user-icon"></ion-icon>
+        <span class="header_user-name">{{ userName() }}</span>
+      </div>
+
+        <mg-button
+          label="Cerrar sesión"
+          [loading]="isLoading()"
+          (click)="logout()"
+          [fluid]="false"
+          [hoverColor]="'var(--verde-botones)'"
+          [textHoverColor]="'var(--white)'"
+          color="#39551C"
+          class="header_logout-btn"
+        />
+
+      <button
+        class="header_menu-toggle"
+        (click)="toggleMenu()"
+        [attr.aria-expanded]="isMenuOpen"
+        aria-label="Toggle menu"
+      >
+        <ion-icon
+          [name]="isMenuOpen ? 'close-outline' : 'menu-outline'"
+          class="header_menu-icon-ion"
+        >
+        </ion-icon>
+      </button>
+      } @else {
+        <div class="header_auth-buttons header_auth-buttons--desktop">
+          <mg-button
+            label="Iniciar sesión"
+            routerLink="/login"
+            [fluid]="false"
+            [hoverColor]="'var(--verde-botones)'"
+            [textHoverColor]="'var(--white)'"
+            class="header_auth-btn header_auth-btn--login"
+            color="var(--amarillo)"
+            [textColor]="'var(--black)'"
+          />
+          <mg-button
+            label="Registrarse"
+            routerLink="/signup"
+            [fluid]="false"
+            [hoverColor]="'var(--verde-botones)'"
+            [textHoverColor]="'var(--white)'"
+            class="header_auth-btn header_auth-btn--signup"
+            color="var(--rojo)"
+          />
+        </div>
+
+        <button
+          class="header_menu-toggle header_menu-toggle--auth"
+          (click)="toggleMenu()"
+          [attr.aria-expanded]="isMenuOpen"
+          aria-label="Toggle menu"
+        >
+          <ion-icon
+            [name]="isMenuOpen ? 'close-outline' : 'menu-outline'"
+            class="header_menu-icon-ion">
+          </ion-icon>
+        </button>
+      }
+    </div>
   </div>
-</nav>
+
+  @if(isMenuOpen) {
+  <div class="header_overlay" (click)="closeMenu()"></div>
+  <nav
+    id="mobile-menu"
+    class="header_nav header_nav--mobile"
+    [class.header_nav--mobile-auth]="!userName()">
+
+    @if(userName()) {
+    <div class="header_mobile-header">
+      <div class="header_mobile-user-info">
+        <div class="header_mobile-avatar">
+          <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="header_mobile-user-details">
+          <span class="header_mobile-greeting">Hola,</span>
+          <span class="header_mobile-user-name">{{ userName() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header_mobile-logos">
+      @for (logo of logos; track logo.src) {
+      <img [src]="logo.src" [alt]="logo.alt" class="header_mobile-logo" />
+      }
+    </div>
+
+    <ul class="header_nav-list">
+    @for (link of links(); track link.label) {
+      <li class="header_nav-item">
+        <a
+          [routerLink]="link.route"
+          [queryParams]="link.queryParams"
+          (click)="closeMenu()"
+          class="header_nav-link">
+          <span>{{ link.label }}</span>
+        </a>
+      </li>
+      }
+    </ul>
+
+      <div class="header_mobile-footer">
+        <mg-button
+          label="Cerrar sesión"
+          [loading]="isLoading()"
+          (click)="logout()"
+          [fluid]="true"
+          color="#39551C"
+          class="header_mobile-logout-btn"
+        />
+      </div>
+    } @else {
+      <div class="header_mobile-header header_mobile-header--auth">
+        <div class="header_mobile-logos">
+        @for (logo of logos; track logo.src) {
+            <img [src]="logo.src" [alt]="logo.alt" class="header_mobile-logo" />
+        }
+        </div>
+      </div>
+
+      <div class="header_mobile-auth-section">
+        <h3 class="header_mobile-auth-title">Accede a tu cuenta</h3>
+        <p class="header_mobile-auth-subtitle">Inicia sesión o crea una cuenta nueva</p>
+
+        <div class="header_mobile-auth-buttons">
+          <mg-button
+            label="Iniciar sesión"
+            routerLink="/login"
+            [fluid]="true"
+            [hoverColor]="'var(--verde-botones)'"
+            [textHoverColor]="'var(--white)'"
+            color="var(--verde-oscuro)"
+            (click)="closeMenu()"
+          />
+          <mg-button
+            label="Registrarse"
+            routerLink="/signup"
+            [fluid]="true"
+            [hoverColor]="'var(--amarillo)'"
+            [textHoverColor]="'var(--black)'"
+            color="var(--rojo)"
+            (click)="closeMenu()"
+          />
+        </div>
+      </div>
+      }
+    </nav>
+  }
+</header>
