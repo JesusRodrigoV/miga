@@ -34,6 +34,10 @@
           (onClick)="abrir(plan.id)"
           [fluid]="false"
           [size]="size"
+          [color]="'var(--violeta)'"
+          [hoverColor]="'var(--black)'"
+          [textColor]="'var(--white)'"
+
         >
           {{ plan.estado == 'final' ? 'Editar' : 'Continuar' }}
         </mg-button>
@@ -45,6 +49,9 @@
           (onClick)="generarPDF(plan.id)"
           [loading]="pdfStore.isLoading() && pdfStore.currentPlanId() === plan.id"
           [disabled]="plan.estado !== 'final' || pdfStore.isLoading()"
+          [color]="'var(--verde-oscuro)'"
+          [hoverColor]="'var(--black)'"
+          [textColor]="'var(--white)'"
         >
           PDF
         </mg-button>
@@ -54,6 +61,9 @@
           (onClick)="eliminar(plan.id)"
           [fluid]="false"
           [size]="size"
+          [color]="'var(--rojo)'"
+          [hoverColor]="'var(--black)'"
+          [textColor]="'var(--white)'"
         >
           <ion-icon name="trash-outline"></ion-icon>
         </mg-button>

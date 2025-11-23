@@ -18,7 +18,7 @@ export class PlanData {
     const tipos = [
       "idea",
       "objetivos",
-      "materia-prima",
+      "costos",
       "mano-obra",
       "costos-indirectos",
       "pon-en-marcha",

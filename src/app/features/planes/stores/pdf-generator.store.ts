@@ -30,7 +30,15 @@ export const GenerarPdfStore = signalStore(
           const secciones = await dataService.fetchAllSections(planId);
           console.log("Data PDF secciones:", secciones);
 
+          await pdfService.preloadLogos([
+            "/logo1.png",
+            "/logo5.jpg",
+            "/logo6.jpg",
+            "/logo4.png",
+          ]);
+
           pdfService.generate(planId, secciones);
+
 
           toast.show(new ToastBuilder("PDF Generado").deExito().build());
         } catch (error: any) {
