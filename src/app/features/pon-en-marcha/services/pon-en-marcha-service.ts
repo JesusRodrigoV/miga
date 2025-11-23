@@ -40,7 +40,7 @@ export class PonEnMarchaService {
 
     const { error: planError } = await supabase
       .from("plans")
-      .update({ ultima_seccion: "pon-en-marcha" })
+      .update({ ultima_seccion: "pon-en-marcha", estado: "final" })
       .eq("id", planId);
 
     if (planError) throw planError;
