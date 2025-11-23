@@ -20,14 +20,15 @@
           </div>
           <div class="header-actions">
             <mg-button
-              label="Borrar"
               icon="trash-outline"
               [color]="'var(--rojo)'"
               [hoverColor]="'var(--black)'"
               [textColor]="'var(--white)'"
               [fluid]="false"
               (onClick)="removeIndirecto(i); $event.stopPropagation()"
-            />
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+          </mg-button>
             <ion-icon name="chevron-down-outline" class="collapse-icon"></ion-icon>
           </div>
         </div>

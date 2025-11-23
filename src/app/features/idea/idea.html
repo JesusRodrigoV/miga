@@ -62,6 +62,9 @@
         [loading]="store.isLoading()"
         [disabled]="form.invalid || store.isLoading()"
         [fluid]="false"
+        [color]="'var(--verde-medio)'"
+        [hoverColor]="'var(--black)'"
+        [textColor]="'var(--white)'"
       >
         @if(store.isLoading()) {
         <span>Guardando...</span>
@@ -77,6 +80,9 @@
         [queryParams]="{ planId: store.planId() }"
         severity="secondary"
         [fluid]="false"
+        [color]="'var(--verde-oscuro)'"
+        [hoverColor]="'var(--black)'"
+        [textColor]="'var(--white)'"
       />
       }
     </div>

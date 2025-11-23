@@ -102,6 +102,7 @@
 
     @media (max-width: 768px) {
       width: 100%;
+
     }
   }
 
@@ -115,6 +116,10 @@
     border-radius: 20px;
     min-width: 100px;
     text-align: center;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   .item-description {
