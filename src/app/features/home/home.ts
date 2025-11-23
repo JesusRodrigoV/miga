@@ -24,7 +24,7 @@ interface Step {
   selector: "app-home",
   imports: [RouterLink, MgButton, CommonModule],
   templateUrl: "./home.html",
-  styleUrl: "./home.scss",
+  styleUrl: "./home.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

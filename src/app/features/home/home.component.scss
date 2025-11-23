@@ -1,0 +1,423 @@
+.home-container {
+  width: 100%;
+  overflow-x: hidden;
+  background: var(--white);
+}
+
+// imports
+@import 'hero.section';
+@import 'about.section';
+@import 'steps.section';
+@import 'cta.section';
+//@import 'animations';
+//@import 'responsive';
+//@import 'accessibility';
+
+// ANIMACIONES
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-25px) translateX(10px);
+  }
+  66% {
+    transform: translateY(-15px) translateX(-10px);
+  }
+}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+  }
+  @keyframes shimmer {
+    0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes scrollPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translate(0, 0);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translate(20px, -30px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-15px, -60px);
+    opacity: 0.3;
+  }
+  75% {
+    transform: translate(30px, -40px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 200%;
+  }
+}
+
+@keyframes iconShine {
+  0%, 100% {
+    transform: rotate(0deg) translate(-50%, -50%);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(180deg) translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+// ANIMACIONES
+
+.animate-in {
+  animation: fadeInUp 1s ease-out;
+}
+
+.animate-in-delay {
+  animation: fadeInUp 1s ease-out 0.2s backwards;
+}
+
+.animate-in-delay-2 {
+  animation: fadeInUp 1s ease-out 0.4s backwards;
+}
+
+.animate-in-right {
+  animation: fadeInUp 1.2s ease-out 0.6s backwards;
+}
+
+
+// COSOS RESPONSIVE
+
+@media (max-width: 1200px) {
+  .hero-section {
+    .hero-content {
+      gap: 4rem;
+    }
+    .hero-visual {
+      .floating-element {
+        padding: 1rem 1.5rem;
+
+        &.element-2 {
+          left: -4%;
+        }
+      }
+    }
+  }
+
+  .steps-section {
+    .step-item {
+      gap: 3rem;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .hero-section {
+    min-height: auto;
+    padding: 5rem 2rem 4rem;
+
+    .hero-scroll-indicator {
+      display: none;
+    }
+
+    .hero-visual {
+      .floating-element {
+        &.element-1 {
+          top: 5%;
+          right: 2%;
+        }
+
+        &.element-2 {
+          top: 55%;
+          left: 0%;
+        }
+
+        &.element-3 {
+          bottom: 8%;
+          right: 5%;
+        }
+      }
+    }
+  }
+
+  .about-section,
+  .steps-section,
+  .cta-section {
+    padding: 6rem 2rem;
+  }
+
+  .cta-section {
+    .cta-container {
+      gap: 4rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    .hero-text {
+      .hero-title {
+        font-size: clamp(2.5rem, 10vw, 3.5rem);
+      }
+
+      .hero-actions {
+        mg-button {
+          width: 100%;
+          min-width: auto;
+        }
+      }
+    }
+
+    .hero-visual {
+      .hero-image-container {
+        max-width: 100%;
+      }
+
+      .floating-element {
+        padding: 0.875rem 1.25rem;
+
+        ion-icon {
+          font-size: 1.5rem;
+        }
+
+        span {
+          font-size: 0.9375rem;
+        }
+      }
+    }
+  }
+
+  .about-section {
+    .benefits-grid {
+      gap: 2rem;
+    }
+
+    .benefit-card {
+      padding: 2.5rem 2rem;
+    }
+  }
+
+  .steps-section {
+    .step-item {
+      .step-content {
+        padding: 2.5rem 2rem;
+
+        .step-header {
+          margin-bottom: 1.25rem;
+        }
+
+        .step-list {
+          li {
+            padding: 0.875rem 1rem;
+          }
+        }
+      }
+    }
+  }
+
+  .cta-section {
+    .cta-content-side {
+      .cta-features {
+        .cta-feature {
+          padding: 1.5rem 1.75rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 4rem 1.5rem 3rem;
+
+    .hero-content {
+      gap: 3rem;
+    }
+
+    .hero-visual {
+      .floating-element {
+        display: none;
+      }
+    }
+  }
+
+  .about-section,
+  .steps-section,
+  .cta-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .about-section {
+    .section-header {
+      margin-bottom: 4rem;
+    }
+  }
+
+  .steps-section {
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .steps-container {
+      gap: 4rem;
+    }
+
+    .step-item {
+      .step-visual {
+        gap: 1.5rem;
+
+        .step-number {
+          width: 70px;
+          height: 70px;
+
+          .number-text {
+            font-size: 2rem;
+          }
+        }
+
+        .step-icon-wrapper {
+          width: 120px;
+          height: 120px;
+
+          ion-icon {
+            font-size: 3.5rem;
+          }
+        }
+      }
+
+      .step-content {
+        padding: 2rem 1.5rem;
+
+        .step-title {
+          font-size: 1.625rem;
+        }
+
+        .step-description {
+          font-size: 1.0625rem;
+        }
+
+        .step-list {
+          gap: 1rem;
+
+          li {
+            font-size: 0.9375rem;
+            padding: 0.75rem 0.875rem;
+
+            .list-icon {
+              width: 24px;
+              height: 24px;
+
+              ion-icon {
+                font-size: 1.5rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .cta-section {
+    .cta-container {
+      gap: 3rem;
+    }
+
+    .cta-content-side {
+      .cta-features {
+        gap: 1.5rem;
+
+        .cta-feature {
+          gap: 1.25rem;
+          padding: 1.25rem 1.5rem;
+
+          .feature-icon {
+            width: 50px;
+            height: 50px;
+
+            ion-icon {
+              font-size: 1.5rem;
+            }
+          }
+
+          .feature-text {
+            strong {
+              font-size: 1.0625rem;
+            }
+
+            span {
+              font-size: 0.9375rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.hero-section,
+.about-section,
+.steps-section,
+.cta-section {
+  &:focus-within {
+    outline: 3px solid var(--amarillo);
+    outline-offset: 5px;
+  }
+}
+
+.floating-element,
+.benefit-card,
+.step-item,
+.cta-feature {
+  &:focus-visible {
+    outline: 3px solid var(--amarillo);
+    outline-offset: 3px;
+  }
+}
