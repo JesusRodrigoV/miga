@@ -33,11 +33,6 @@ export const routes: Routes = [
             loadComponent: () => import("./features/objetivo/objetivo"),
           },
           {
-            path: "generar-pdf",
-            title: "Generar PDF",
-            loadComponent: () => import("./features/generar-pdf/generar-pdf"),
-          },
-          {
             path: "pon-en-marcha",
             title: "Pon en Marcha",
             loadComponent: () =>

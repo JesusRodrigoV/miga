@@ -10,6 +10,8 @@ import { Router } from "@angular/router";
 import { MgButton } from "@shared/components/mg-button";
 import { ButtonIconPos, ButtonSize } from "@shared/components/mg-button/models";
 import { PlanesStore } from "./stores";
+import { GenerarPdfStore } from "./stores/pdf-generator.store";
+import { SeverityTypes } from "@shared/services/toast";
 
 @Component({
   selector: "app-planes",
@@ -18,11 +20,13 @@ import { PlanesStore } from "./stores";
   styleUrl: "./planes.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [PlanesStore],
+  providers: [PlanesStore, GenerarPdfStore],
 })
 export default class Planes implements OnInit {
   private router = inject(Router);
   protected planesStore = inject(PlanesStore);
+  protected pdfStore = inject(GenerarPdfStore);
+
   size = ButtonSize.SMALL;
   pos = ButtonIconPos.RIGHT;
 
@@ -52,5 +56,9 @@ export default class Planes implements OnInit {
     if (confirmado) {
       await this.planesStore.eliminarPlan(planId);
     }
+  }
+
+  generarPDF(planId: string) {
+    this.pdfStore.generarParaPlan(planId);
   }
 }

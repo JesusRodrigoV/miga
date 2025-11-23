@@ -22,10 +22,6 @@
           <i class="pi pi-calendar" style="margin-right: 5px"></i>
           Creado el {{ plan.created_at | date: 'dd MMM, yyyy' }}
         </span>
-        <!-- Opcional: Mostrar ID para debug -->
-        <small style="color: #999; font-size: 0.8em"
-          >ID: {{ plan.id.slice(0,8) }}...</small
-        >
       </div>
 
       <div class="plan-actions" style="display: flex; gap: 0.5rem">
@@ -35,6 +31,16 @@
           [fluid]="false"
           severity="secondary"
           [size]="size"
+        />
+        <mg-button
+          label="PDF"
+          icon="pi pi-file-pdf"
+          severity="warn"
+          [fluid]="false"
+          [size]="size"
+          (onClick)="generarPDF(plan.id)"
+          [loading]="pdfStore.isLoading() && pdfStore.currentPlanId() === plan.id"
+          [disabled]="pdfStore.isLoading()"
         />
 
         <mg-button

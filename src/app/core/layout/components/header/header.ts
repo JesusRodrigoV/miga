@@ -31,24 +31,10 @@ export class Header {
 
   currentPlanId = input<string | null>(null);
 
-  links = computed<MenuItem[]>(() => {
-    const menu: MenuItem[] = [
-      { label: "Inicio", route: ["/inicio"] },
-      { label: "Planes", route: ["/planes"] },
-    ];
-
-    const planId = this.currentPlanId();
-
-    if (planId) {
-      menu.push({
-        label: "Generar PDF",
-        route: ["/generar-pdf"],
-        queryParams: { planId: planId },
-      });
-    }
-
-    return menu;
-  });
+  links: MenuItem[] = [
+    { label: "Inicio", route: ["/inicio"] },
+    { label: "Planes", route: ["/planes"] },
+  ];
 
   logos = [
     { src: "/logo1.png", alt: "Logo 1" },
