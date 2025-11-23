@@ -61,7 +61,7 @@ export class PdfGenerator {
 
     const costos = secciones["materia-prima"];
     if (costos) {
-      addSectionTitle("💰 Parte 3.1: Costos - Materia Prima");
+      addSectionTitle("Parte 3.1: Costos - Materia Prima");
       addText("Nombre del producto", costos.nombreProducto || "");
       addText("Unidades producidas", costos.unidadesProducidas || "");
 
