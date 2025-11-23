@@ -15,7 +15,11 @@
     @for (plan of planesStore.planes(); track plan.id) {
     <li class="plan-card">
       <div class="plan-info">
-        <span class="status-badge" [class]="plan.estado">
+        <span
+          class="status-badge"
+          [class.borrador]="plan.estado === 'borrador'"
+          [class.finalizado]="plan.estado === 'final'"
+        >
           {{ plan.estado | uppercase }}
         </span>
         <span class="date-info">
@@ -26,22 +30,24 @@
 
       <div class="plan-actions" style="display: flex; gap: 0.5rem">
         <mg-button
-          label="Continuar"
+          [severity]="plan.estado === 'final' ? 'info' : 'secondary'"
           (onClick)="abrir(plan.id)"
           [fluid]="false"
-          severity="secondary"
           [size]="size"
-        />
+        >
+          {{ plan.estado == 'final' ? 'Editar' : 'Continuar' }}
+        </mg-button>
+
         <mg-button
-          label="PDF"
-          icon="pi pi-file-pdf"
           severity="warn"
           [fluid]="false"
           [size]="size"
           (onClick)="generarPDF(plan.id)"
           [loading]="pdfStore.isLoading() && pdfStore.currentPlanId() === plan.id"
-          [disabled]="pdfStore.isLoading()"
-        />
+          [disabled]="plan.estado !== 'final' || pdfStore.isLoading()"
+        >
+          PDF
+        </mg-button>
 
         <mg-button
           severity="danger"

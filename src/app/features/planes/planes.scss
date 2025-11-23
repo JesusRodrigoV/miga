@@ -59,10 +59,11 @@
       color: var(--primary-color);
 
       &.borrador {
-        color: var(--orange-500);
+        color: #c2410c;
       }
+
       &.finalizado {
-        color: var(--green-500);
+        color: #15803d;
       }
     }
 

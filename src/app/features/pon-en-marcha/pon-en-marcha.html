@@ -1,9 +1,7 @@
 <div class="container">
   <div class="header">
     <h2>Parte 4: Pon en Marcha</h2>
-    <p class="subtitle">
-      Comienza con tu negocio ahora.
-    </p>
+    <p class="subtitle">Comienza con tu negocio ahora.</p>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="smart-form">
@@ -77,9 +75,8 @@
     <p>¡Felicidades! Has completado tu plan.</p>
 
     <mg-button
-      label="Generar PDF Final"
-      [routerLink]="['/generar-pdf']"
-      [queryParams]="{ planId: store.planId() }"
+      label="Ver mis planes"
+      [routerLink]="['/planes']"
       severity="success"
       [fluid]="false"
       icon="pi pi-file-pdf"
