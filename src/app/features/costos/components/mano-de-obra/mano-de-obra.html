@@ -1,40 +1,113 @@
-<h2>Parte 2: Mano de Obra Directa</h2>
+<h2 class="page-title">Parte 2: Mano de Obra Directa</h2>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <div>
-    <label>Salario Mínimo Nacional (Bs):</label>
-    <input type="number" formControlName="salarioMinimo" />
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+
+
+  <div class="parametros-section">
+    <h3 class="section-title">
+      <ion-icon name="settings-outline"></ion-icon>
+      Parámetros de Cálculo
+    </h3>
+
+    <div class="form-grid">
+      <div class="field-group">
+        <mg-input
+          label="Salario Mínimo Nacional (Bs)"
+          type="number"
+          formControlName="salarioMinimo"
+          [invalid]="!!(form.get('salarioMinimo')?.invalid && form.get('salarioMinimo')?.touched)"
+          errorMessage="Campo requerido"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="field-group">
+        <mg-input
+          label="Días por mes"
+          type="number"
+          formControlName="diasPorMes"
+          [invalid]="!!(form.get('diasPorMes')?.invalid && form.get('diasPorMes')?.touched)"
+          errorMessage="Campo requerido"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="field-group">
+        <mg-input
+          label="Horas por día"
+          type="number"
+          formControlName="horasPorDia"
+          [invalid]="!!(form.get('horasPorDia')?.invalid && form.get('horasPorDia')?.touched)"
+          errorMessage="Campo requerido"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="field-group">
+        <mg-input
+          label="Horas requeridas por receta"
+          type="number"
+          formControlName="horasReceta"
+          [invalid]="!!(form.get('horasReceta')?.invalid && form.get('horasReceta')?.touched)"
+          errorMessage="Campo requerido"
+          [fluid]="true"
+        />
+      </div>
+    </div>
   </div>
 
-  <div>
-    <label>Días por mes:</label>
-    <input type="number" formControlName="diasPorMes" />
+  <hr class="section-divider" />
+
+  <div class="resultados-section">
+    <h3 class="resultados-title">
+      <ion-icon name="calculator-outline"></ion-icon>
+      Resultados Calculados
+    </h3>
+
+    <div class="resultados-grid">
+      <div class="resultado-card">
+        <div class="resultado-label">
+          <ion-icon name="time-outline"></ion-icon>
+          Pago por hora
+        </div>
+        <div class="resultado-valor">
+          {{ pagoHora | number: '1.2-2' }}
+          <span class="moneda">Bs</span>
+        </div>
+      </div>
+
+      <div class="resultado-card destacado">
+        <div class="resultado-label">
+          <ion-icon name="receipt-outline"></ion-icon>
+          Pago total por receta
+        </div>
+        <div class="resultado-valor">
+          {{ pagoReceta | number: '1.2-2' }}
+          <span class="moneda">Bs</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <label>Horas por día:</label>
-    <input type="number" formControlName="horasPorDia" />
+  <div class="form-actions">
+    <mg-button
+      label="Cancelar"
+      [color]="'var(--rojo)'"
+      [hoverColor]="'var(--black)'"
+      [textColor]="'var(--white)'"
+      [fluid]="false"
+    />
+
+    <mg-button
+      label="Guardar y continuar"
+      icon="arrow-forward-outline"
+      [color]="'var(--verde-medio)'"
+      [hoverColor]="'var(--black)'"
+      [textColor]="'var(--white)'"
+      [fluid]="false"
+      [buttonProps]="{ type: 'submit' }"
+    />
   </div>
 
-  <div>
-    <label>Horas requeridas por receta:</label>
-    <input type="number" formControlName="horasReceta" />
-  </div>
-
-  <hr />
-
-  <p>
-    <strong>Pago por hora (calculado):</strong> {{ pagoHora | number: '1.2-2' }}
-    Bs
-  </p>
-  <p>
-    <strong>Pago total por receta:</strong> {{ pagoReceta | number: '1.2-2' }}
-    Bs
-  </p>
-
-  <button type="submit" [disabled]="form.invalid">Guardar y continuar</button>
 </form>
 
-@if (msg) {
-<p>{{ msg }}</p>
-}

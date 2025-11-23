@@ -1,11 +1,11 @@
 import { DecimalPipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   inject,
   OnInit,
-  signal,
+  effect,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from "@angular/core";
 import {
   FormArray,
@@ -15,12 +15,9 @@ import {
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { getSupabase } from "@core/services";
-import { StorageService } from "@core/services/storage-service";
 import { MgButton } from "@shared/components/mg-button";
 import { MgInput } from "@shared/components/mg-input";
-import { ToastBuilder, ToastService } from "@shared/services/toast";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { CostosIndirectosStore } from "../../store/costos-indirectos.store";
 
 @Component({
   selector: "app-costos-indirectos",
@@ -28,13 +25,11 @@ import { SupabaseClient } from "@supabase/supabase-js";
   templateUrl: "./costos-indirectos.html",
   styleUrl: "./costos-indirectos.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [CostosIndirectosStore],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export default class CostosIndirectos implements OnInit {
   form: FormGroup;
-  planId: string | null = null;
-
-  isLoading = signal(false);
-
   totalCostoMensual = 0;
   totalCostoPorDia = 0;
   totalCostoPorHora = 0;
@@ -44,25 +39,65 @@ export default class CostosIndirectos implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
-  private storage = inject(StorageService);
-  private toastService = inject(ToastService);
+  readonly store = inject(CostosIndirectosStore);
+
+  itemCollapsed: boolean[] = [];
+
+  // Método para alternar el colapso de un ítem
+  toggleItem(index: number): void {
+    this.itemCollapsed[index] = !this.itemCollapsed[index];
+  }
 
   constructor() {
+    console.log("[CostosIndirectos Component] Constructor called");
+
     this.form = this.fb.group({
       indirectos: this.fb.array([]),
     });
+
+    // Efecto para cargar datos iniciales
+    effect(() => {
+      const initialData = this.store.initialData();
+      console.log("[CostosIndirectos Component] Initial data effect triggered:", initialData);
+
+      if (initialData && initialData.inputs_json) {
+        this.loadFormData(initialData.inputs_json);
+      }
+    });
+
+    // Efecto para navegar después de guardar
+    effect(() => {
+      const isSaved = this.store.isSaved();
+      const planId = this.store.planId();
+
+      console.log("[CostosIndirectos Component] Save status changed:", isSaved);
+
+      if (isSaved && planId) {
+        console.log("[CostosIndirectos Component] Navigating to resumen");
+        this.router.navigate(["/costos/resumen"], {
+          queryParams: { planId },
+        });
+      }
+    });
   }
 
-  private supabase: SupabaseClient | null = null;
+  ngOnInit() {
+    console.log("[CostosIndirectos Component] ngOnInit called");
 
-  private async getClient(): Promise<SupabaseClient> {
-    if (this.supabase) {
-      return this.supabase;
-    }
+    this.route.queryParams.subscribe((params) => {
+      const planId = params["planId"] || null;
+      console.log("[CostosIndirectos Component] Query params planId:", planId);
 
-    this.supabase = await getSupabase();
-    return this.supabase;
+      this.store.loadPageData(planId);
+    });
+
+    // Si no hay datos iniciales, agregar un item vacío
+    setTimeout(() => {
+      if (this.indirectos.length === 0) {
+        console.log("[CostosIndirectos Component] Adding empty indirecto");
+        this.addIndirecto();
+      }
+    }, 500);
   }
 
   get indirectos(): FormArray {
@@ -70,7 +105,8 @@ export default class CostosIndirectos implements OnInit {
   }
 
   addIndirecto() {
-    console.log("Agregando ítem...");
+    console.log("[CostosIndirectos Component] addIndirecto called");
+
     const group = this.fb.group({
       descripcion: ["", Validators.required],
       costoMensual: [0, [Validators.required, Validators.min(0)]],
@@ -81,38 +117,26 @@ export default class CostosIndirectos implements OnInit {
       costoNeto: [{ value: 0, disabled: true }],
     });
 
-    group.valueChanges.subscribe(() => this.calcularTotales());
+    group.valueChanges.subscribe(() => {
+      console.log("[CostosIndirectos Component] Form group value changed");
+      this.calcularTotales();
+    });
 
     this.indirectos.push(group);
+    this.itemCollapsed.push(false);
   }
 
   removeIndirecto(index: number) {
+    console.log("[CostosIndirectos Component] removeIndirecto called, index:", index);
+
     this.indirectos.removeAt(index);
     this.calcularTotales();
-  }
-
-  ngOnInit() {
-    this.route.queryParams.subscribe(async (params) => {
-      this.planId = params["planId"] || null;
-
-      if (!this.planId) {
-        const supabase = await this.getClient();
-        const { data, error } = await supabase.rpc("create_or_get_plan");
-        if (error) throw error;
-        this.planId = data;
-      }
-
-      this.storage.setItem("currentPlanId", this.planId!);
-
-      this.cdr.detectChanges();
-
-      await this.loadSection();
-      if (this.indirectos.length === 0) this.addIndirecto();
-    });
-    this.cdr.detectChanges();
+    this.itemCollapsed.splice(index, 1);
   }
 
   calcularTotales() {
+    console.log("[CostosIndirectos Component] calcularTotales called");
+
     this.totalCostoMensual = 0;
     this.totalCostoPorDia = 0;
     this.totalCostoPorHora = 0;
@@ -122,9 +146,9 @@ export default class CostosIndirectos implements OnInit {
     this.indirectos.controls.forEach((control) => {
       const group = control as FormGroup;
 
-      const mensual = group.get("costoMensual")?.value || 0;
-      const dias = group.get("diasCalculados")?.value || 1;
-      const horasReq = group.get("horasRequeridas")?.value || 0;
+      const mensual = Number(group.get("costoMensual")?.value) || 0;
+      const dias = Number(group.get("diasCalculados")?.value) || 30;
+      const horasReq = Number(group.get("horasRequeridas")?.value) || 0;
 
       const porDia = mensual / dias;
       const porHora = porDia / 8;
@@ -136,7 +160,7 @@ export default class CostosIndirectos implements OnInit {
           costoPorHora: porHora,
           costoNeto: neto,
         },
-        { emitEvent: false },
+        { emitEvent: false }
       );
 
       this.totalCostoMensual += mensual;
@@ -145,89 +169,64 @@ export default class CostosIndirectos implements OnInit {
       this.totalHorasRequeridas += horasReq;
       this.totalCostoNeto += neto;
     });
+
+    console.log("[CostosIndirectos Component] Totales calculados:", {
+      totalCostoMensual: this.totalCostoMensual,
+      totalCostoPorDia: this.totalCostoPorDia,
+      totalCostoPorHora: this.totalCostoPorHora,
+      totalHorasRequeridas: this.totalHorasRequeridas,
+      totalCostoNeto: this.totalCostoNeto,
+    });
   }
 
-  async loadSection() {
-    const supabase = await this.getClient();
-    const { data } = await supabase
-      .from("sections")
-      .select("*")
-      .eq("plan_id", this.planId)
-      .eq("tipo", "costos-indirectos")
-      .single();
+  private loadFormData(inputsJson: any) {
+    console.log("[CostosIndirectos Component] loadFormData called:", inputsJson);
 
-    if (data && data.inputs_json) {
-      data.inputs_json.indirectos.forEach((ind: any) => {
-        const group = this.fb.group({
-          descripcion: [ind.descripcion],
-          costoMensual: [ind.costoMensual],
-          diasCalculados: [ind.diasCalculados],
-          costoPorDia: [{ value: ind.costoPorDia, disabled: true }],
-          costoPorHora: [{ value: ind.costoPorHora, disabled: true }],
-          horasRequeridas: [ind.horasRequeridas],
-          costoNeto: [{ value: ind.costoNeto, disabled: true }],
+    // Limpiar indirectos existentes
+    while (this.indirectos.length) {
+      this.indirectos.removeAt(0);
+    }
+
+    // Cargar indirectos guardados
+    inputsJson.indirectos?.forEach((ind: any) => {
+      const group = this.fb.group({
+        descripcion: [ind.descripcion || ""],
+        costoMensual: [Number(ind.costoMensual) || 0, [Validators.required, Validators.min(0)]],
+        diasCalculados: [Number(ind.diasCalculados) || 30, [Validators.required, Validators.min(1)]],
+        horasRequeridas: [Number(ind.horasRequeridas) || 0, [Validators.required, Validators.min(0)]],
+        costoPorDia: [{ value: Number(ind.costoPorDia) || 0, disabled: true }],
+        costoPorHora: [{ value: Number(ind.costoPorHora) || 0, disabled: true }],
+        costoNeto: [{ value: Number(ind.costoNeto) || 0, disabled: true }],
         });
 
-        group.valueChanges.subscribe(() => this.calcularTotales());
+      group.valueChanges.subscribe(() => this.calcularTotales());
 
-        this.indirectos.push(group);
-      });
+      this.indirectos.push(group);
+    });
 
-      this.calcularTotales();
-    }
+    this.calcularTotales();
+    console.log("[CostosIndirectos Component] Form data loaded successfully");
   }
 
+
   async onSubmit() {
-    if (!this.planId) return;
+    console.log("[CostosIndirectos Component] onSubmit called");
 
     this.form.markAllAsTouched();
+
     if (this.form.invalid) {
-      this.toastService.show(
-        new ToastBuilder("Por favor, completa los campos requeridos")
-          .deAdvertencia()
-          .build(),
-      );
+      console.warn("[CostosIndirectos Component] Form is invalid");
       return;
     }
 
-    this.isLoading.set(true);
+    const formData = this.form.getRawValue();
+    const outputs = {
+      totalCostoIndirecto: this.totalCostoNeto,
+    };
 
-    try {
-      const supabase = await this.getClient();
+    console.log("[CostosIndirectos Component] Submitting form data:", formData);
+    console.log("[CostosIndirectos Component] Submitting outputs:", outputs);
 
-      const { error: sectionError } = await supabase.from("sections").upsert(
-        {
-          plan_id: this.planId,
-          tipo: "costos-indirectos",
-          inputs_json: this.form.getRawValue(),
-          outputs_json: { totalCostoIndirecto: this.totalCostoNeto },
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "plan_id,tipo" },
-      );
-
-      if (sectionError) throw sectionError;
-
-      const { error: planError } = await supabase
-        .from("plans")
-        .update({ ultima_seccion: "costos-indirectos" })
-        .eq("id", this.planId);
-
-      if (planError) throw planError;
-
-      this.toastService.show(
-        new ToastBuilder("Costos indirectos guardados").deExito().build(),
-      );
-
-      this.router.navigate(["/costos/resumen"], {
-        queryParams: { planId: this.planId },
-      });
-    } catch (error: any) {
-      this.toastService.show(
-        new ToastBuilder(error.message || "Error al guardar").deError().build(),
-      );
-    } finally {
-      this.isLoading.set(false);
-    }
+    await this.store.saveCostosIndirectos(formData, outputs);
   }
 }

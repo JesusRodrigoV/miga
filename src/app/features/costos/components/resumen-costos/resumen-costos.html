@@ -1,68 +1,137 @@
-<h2 class="text-xl font-bold mb-4">Parte 3.4: Resumen General de Costos</h2>
+<h2 class="page-title">
+  Parte 4: Resumen General de Costos
+</h2>
 
-<table class="table-auto w-full text-left border border-black">
-  <thead>
-    <tr class="bg-gray-100">
-      <th class="border border-black px-4 py-2">Concepto</th>
-      <th class="border border-black px-4 py-2">Monto (Bs)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="border border-black px-4 py-2">Costo de Materia Prima (MP)</td>
-      <td class="border border-black px-4 py-2">
-        {{ totalMP | number: '1.2-2' }}
-      </td>
-    </tr>
-    <tr>
-      <td class="border border-black px-4 py-2">Costo de Mano de Obra (MO)</td>
-      <td class="border border-black px-4 py-2">
-        {{ totalMO | number: '1.2-2' }}
-      </td>
-    </tr>
-    <tr>
-      <td class="border border-black px-4 py-2">Costo Indirecto (CI)</td>
-      <td class="border border-black px-4 py-2">
-        {{ totalCI | number: '1.2-2' }}
-      </td>
-    </tr>
-    <tr>
-      <td class="border border-black px-4 py-2">
-        Costo Ponderado (CP = MP + MO)
-      </td>
-      <td class="border border-black px-4 py-2">{{ cp | number: '1.2-2' }}</td>
-    </tr>
-    <tr>
-      <td class="border border-black px-4 py-2">
-        Costo de Conversión (CC = MO + CI)
-      </td>
-      <td class="border border-black px-4 py-2">{{ cc | number: '1.2-2' }}</td>
-    </tr>
-    <tr>
-      <td class="border border-black px-4 py-2">
-        Costo de Producción (CPcc = MP + MO + CI)
-      </td>
-      <td class="border border-black px-4 py-2">
-        {{ cpcc | number: '1.2-2' }}
-      </td>
-    </tr>
-    <tr>
-      <td class="border border-black px-4 py-2">
-        Costo Unitario (CU = CPcc / unidades)
-      </td>
-      <td class="border border-black px-4 py-2">{{ cu | number: '1.2-2' }}</td>
-    </tr>
-  </tbody>
-</table>
+@if (store.isLoading()) {
+  <div class="loading-state">
+    <ion-icon name="sync-outline"></ion-icon>
+    <h3 class="state-title">Cargando información</h3>
+    <p class="state-message">Por favor espere mientras cargamos el resumen de costos...</p>
+  </div>
+}
 
-<div class="actions">
-  <mg-button
-    label="Siguiente: Pon en Marcha →"
-    (onClick)="navigateToPonEnMarcha()"
-    [fluid]="false"
-    severity="primary"
-  />
-</div>
-@if (msg) {
-<div class="mt-4 text-red-600 font-semibold">{{ msg }}</div>
+@else if (!store.hasSufficientData()) {
+  <div class="error-state">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h3 class="state-title">Datos incompletos</h3>
+    <p class="state-message">
+      No se pudieron cargar todos los datos necesarios para el resumen.
+      Por favor, complete las secciones anteriores (Materia Prima, Mano de Obra y Costos Indirectos).
+    </p>
+  </div>
+}
+
+@else {
+  <div class="resumen-container">
+
+    <div class="table-wrapper">
+      <table class="resumen-table">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th class="text-right">Monto (Bs)</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Costos base -->
+          <tr class="row-base">
+            <td class="concepto">
+              <ion-icon name="leaf-outline"></ion-icon>
+              Costo de Materia Prima (MP)
+            </td>
+            <td class="text-right">
+              {{ store.totalMP() | number:'1.2-2' }}
+            </td>
+          </tr>
+
+          <tr class="row-base">
+            <td class="concepto">
+              <ion-icon name="people-outline"></ion-icon>
+              Costo de Mano de Obra (MO)
+            </td>
+            <td class="text-right">
+              {{ store.totalMO() | number:'1.2-2' }}
+            </td>
+          </tr>
+
+          <tr class="row-base">
+            <td class="concepto">
+              <ion-icon name="construct-outline"></ion-icon>
+              Costo Indirecto (CI)
+            </td>
+            <td class="text-right">
+              {{ store.totalCI() | number:'1.2-2' }}
+            </td>
+          </tr>
+
+          <!-- Costos calculados intermedios -->
+          <tr class="row-calculated">
+            <td class="concepto">
+              <ion-icon name="analytics-outline"></ion-icon>
+              Costo Ponderado (CP = MP + MO)
+            </td>
+            <td class="text-right">
+              {{ store.costoPonderado() | number:'1.2-2' }}
+            </td>
+          </tr>
+
+          <tr class="row-calculated">
+            <td class="concepto">
+              <ion-icon name="git-merge-outline"></ion-icon>
+              Costo de Conversión (CC = MO + CI)
+            </td>
+            <td class="text-right">
+              {{ store.costoConversion() | number:'1.2-2' }}
+            </td>
+          </tr>
+
+          <!-- Costo de producción -->
+          <tr class="row-produccion">
+            <td class="concepto">
+              <ion-icon name="cube-outline"></ion-icon>
+              Costo de Producción (CPcc = MP + MO + CI)
+            </td>
+            <td class="text-right">
+              {{ store.costoProduccion() | number:'1.2-2' }}
+            </td>
+          </tr>
+
+          <!-- Costo unitario (destacado) -->
+          <tr class="row-unitario">
+            <td class="concepto">
+              <ion-icon name="pricetag"></ion-icon>
+              Costo Unitario (CU = CPcc / {{ store.unidades() }} unidades)
+            </td>
+            <td class="text-right">
+              {{ store.costoUnitario() | number:'1.2-2' }}
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="actions-section">
+    <mg-button
+      label="Cancelar"
+      icon="arrow-back-outline"
+      [color]="'var(--verde-medio)'"
+      [hoverColor]="'var(--black)'"
+      [textColor]="'var(--white)'"
+      [fluid]="false"
+    />
+
+    <mg-button
+      label="Siguiente: Pon en Marcha"
+      icon="arrow-forward-outline"
+      [color]="'var(--verde-claro)'"
+      [hoverColor]="'var(--black)'"
+      [textColor]="'var(--white)'"
+      [fluid]="false"
+      (onClick)="navigateToPonEnMarcha()"
+    />
+  </div>
 }

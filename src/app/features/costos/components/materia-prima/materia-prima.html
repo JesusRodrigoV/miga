@@ -1,130 +1,221 @@
-<h2>Parte 3.1: Costos - Materia Prima</h2>
+<h2 class="page-title">Parte 3.1: Costos - Materia Prima</h2>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
-  <div>
-    <label>Nombre del producto:</label>
-    <input type="text" formControlName="nombreProducto" required />
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+
+  <div class="product-info">
+    <div class="field-group">
+      <label>Nombre del Producto</label>
+      <mg-input
+        label="Nombre del producto"
+        formControlName="nombreProducto"
+        [invalid]="!!(form.get('nombreProducto')?.invalid && form.get('nombreProducto')?.touched)"
+        errorMessage="Campo requerido"
+        [fluid]="true"
+      />
+    </div>
+
+    <div class="field-group">
+      <label>Unidades Producidas</label>
+      <mg-input
+        label="Unidades producidas"
+        type="number"
+        formControlName="unidadesProducidas"
+        [invalid]="!!(form.get('unidadesProducidas')?.invalid && form.get('unidadesProducidas')?.touched)"
+        errorMessage="Debe ser al menos 1"
+        [fluid]="true"
+        (input)="calcularTotales()"
+      />
+    </div>
   </div>
 
-  <div>
-    <label>Unidades producidas:</label>
-    <input
-      type="number"
-      formControlName="unidadesProducidas"
-      min="1"
-      (input)="calcularTotales()"
+  <div class="ingredientes-section">
+    <div class="section-header">
+      <h3>Ingredientes</h3>
+    </div>
+
+    @for (ing of ingredientes.controls; track ing; let i = $index) {
+      <div class="ingrediente-card" [class.collapsed]="ingredienteCollapsed[i]">
+
+        <div class="ingrediente-header" (click)="toggleIngrediente(i)">
+          <div class="header-left">
+            <span class="ingrediente-number">Ingrediente {{ i + 1 }}</span>
+            <span class="ingrediente-name">
+              {{ asFormGroup(ing).get('nombre')?.value || 'Sin nombre' }}
+            </span>
+          </div>
+          <div class="header-actions">
+            <mg-button
+              icon="pi pi-trash"
+              [rounded]="true"
+              label="Borrar"
+              [color]="'var(--rojo)'"
+              [hoverColor]="'var(--black)'"
+              [size]="$any('small')"
+              [fluid]="false"
+              (onClick)="removeIngrediente(i); $event.stopPropagation()"
+            />
+            <ion-icon name="chevron-down-outline" class="collapse-icon"></ion-icon>
+          </div>
+        </div>
+
+        <div class="ingrediente-body" [formGroup]="asFormGroup(ing)">
+          <div class="form-grid">
+
+            <div class="field-group">
+              <label>Nombre del Ingrediente</label>
+              <mg-input
+                label="Nombre del ingrediente"
+                formControlName="nombre"
+                [invalid]="!!(asFormGroup(ing).get('nombre')?.invalid && asFormGroup(ing).get('nombre')?.touched)"
+                errorMessage="Campo requerido"
+                [fluid]="true"
+              />
+            </div>
+
+            <div class="field-group">
+              <label>U/M (mercado) - ¿En qué se compra?</label>
+              <select
+                formControlName="unidadMercado"
+                (change)="onUnidadMercadoChange(i)"
+                class="custom-select"
+              >
+                <option value="">-- Seleccione --</option>
+                @for (unidad of unidadesDisponibles; track unidad.value) {
+                  <option [value]="unidad.value">{{ unidad.label }}</option>
+                }
+              </select>
+              @if (asFormGroup(ing).get('unidadMercado')?.invalid && asFormGroup(ing).get('unidadMercado')?.touched) {
+                <span class="error">Campo requerido</span>
+              }
+            </div>
+
+            <div class="field-group">
+              <label>Precio Unitario en el mercado</label>
+              <mg-input
+                label="Precio Unitario en el mercado (Bs)"
+                type="number"
+                formControlName="precioMercado"
+                [invalid]="!!(asFormGroup(ing).get('precioMercado')?.invalid && asFormGroup(ing).get('precioMercado')?.touched)"
+                errorMessage="Precio inválido"
+                [fluid]="true"
+                (input)="calcularTotales()"
+              />
+            </div>
+
+            <div class="field-group">
+              <label>Unidad de medida para cantidad requerida</label>
+              <select
+                formControlName="unidadPeso"
+                (change)="onUnidadPesoChange(i)"
+                class="custom-select"
+              >
+                <option value="">-- Seleccione --</option>
+                @for (unidad of getUnidadesCompatibles(i); track unidad.value) {
+                  <option [value]="unidad.value">{{ unidad.label }}</option>
+                }
+              </select>
+              @if (asFormGroup(ing).get('unidadPeso')?.invalid && asFormGroup(ing).get('unidadPeso')?.touched) {
+                <span class="error">Campo requerido</span>
+              }
+              @if (asFormGroup(ing).get('unidadMercado')?.value && !asFormGroup(ing).get('unidadPeso')?.value) {
+                <span class="info">
+                  Seleccione una unidad compatible con {{ asFormGroup(ing).get('unidadMercado')?.value }}
+                </span>
+              }
+            </div>
+
+            <div class="field-group">
+              <label>Cantidad requerida</label>
+              <mg-input
+                label="Cantidad requerida"
+                type="number"
+                formControlName="cantidadRequerida"
+                [invalid]="!!(asFormGroup(ing).get('cantidadRequerida')?.invalid && asFormGroup(ing).get('cantidadRequerida')?.touched)"
+                errorMessage="Cantidad inválida"
+                [fluid]="true"
+                (input)="calcularTotales()"
+              />
+              @if (asFormGroup(ing).get('unidadPeso')?.value) {
+                <span class="info">
+                  en {{ getUnidadPesoLabel(i) }}
+                </span>
+              }
+            </div>
+
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="add-ingrediente-wrapper">
+      <mg-button
+        label="Agregar ingrediente"
+        icon="add-circle-outline"
+        [color]="'var(--verde-botones)'"
+        [hoverColor]="'var(--black)'"
+        [fluid]="false"
+        (onClick)="addIngrediente()"
+      />
+      <ion-icon name="add-circle-outline" class="icono"></ion-icon>
+    </div>
+  </div>
+
+  @if (ingredientes.length > 0) {
+    <div class="resumen-section">
+      <h3>Resumen de costos</h3>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Ingrediente</th>
+              <th>Unidad</th>
+              <th>Costo de Ingredientes (Bs)</th>
+              <th>MP/U</th>
+              <th>Costo/U (Bs)</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (ing of ingredientes.controls; track ing) {
+              <tr>
+                <td>{{ ing.get('nombre')?.value || 'Sin nombre' }}</td>
+                <td>{{ getUnidadLabel(ing.get('unidadPeso')?.value) }}</td>
+                <td>{{ ing.get('costoIngrediente')?.value | number:'1.2-2' }}</td>
+                <td>{{ ing.get('mpPorUnidad')?.value | number:'1.2-2' }}</td>
+                <td>{{ ing.get('costoPorUnidad')?.value | number:'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2">Total</th>
+              <th>{{ totalCostoIngredientes | number:'1.2-2' }} Bs</th>
+              <th></th>
+              <th>{{ totalCostoPorUnidad | number:'1.2-2' }} Bs</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  }
+
+  <div class="form-actions">
+    <mg-button
+      label="Cancelar"
+      [color]="'var(--rojo)'"
+      [hoverColor]="'var(--black)'"
+      [fluid]="false"
+    />
+
+    <mg-button
+      label="Guardar Materia Prima y continuar"
+      icon="save-outline"
+      [color]="'var(--verde-medio)'"
+      [hoverColor]="'var(--black)'"
+      [textColor]="'var(--white)'"
+      [disabled]="form.invalid"
+      [fluid]="false"
+      [buttonProps]="{ type: 'submit' }"
     />
   </div>
 
-  @for (ing of ingredientes.controls; track ing; let i = $index) {
-  <div [formGroup]="asFormGroup(ing)" class="border p-4 rounded-lg mb-6">
-    <h4>Ingrediente {{ i + 1 }}</h4>
-
-    <div>
-      <label>Nombre:</label>
-      <input type="text" formControlName="nombre" />
-    </div>
-
-    <div>
-      <label>U/M (mercado):</label>
-      <select formControlName="unidadMercado" (change)="actualizarPeso(i)">
-        <option value="">-- Seleccione --</option>
-        <option value="libra">Libra</option>
-        <option value="kilo">Kilo</option>
-        <option value="unidad">Unidad</option>
-        <option value="botella">Botella</option>
-        <option value="ml">Mililitros</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Precio Unitario en el mercado (Bs):</label>
-      <input
-        type="number"
-        formControlName="precioMercado"
-        (input)="calcularTotales()"
-      />
-    </div>
-
-    <div>
-      <label>Peso según unidad (g / ml / unidad):</label>
-      <input type="number" formControlName="peso" [disabled]="true" />
-    </div>
-
-    <div>
-      <label>Unidad de peso:</label>
-      <input type="text" formControlName="unidadPeso" [disabled]="true" />
-    </div>
-
-    <div>
-      <label>Cantidad requerida:</label>
-      <input
-        type="number"
-        formControlName="cantidadRequerida"
-        (input)="calcularTotales()"
-      />
-    </div>
-
-    <button type="button" (click)="removeIngrediente(i)">
-      🗑️ Eliminar ingrediente
-    </button>
-  </div>
-  }
-
-  <button type="button" (click)="addIngrediente()">
-    ➕ Agregar ingrediente
-  </button>
-  <br /><br />
-
-  @if (ingredientes.length > 0) {
-  <div>
-    <h3>Resumen de costos</h3>
-    <table border="1" cellpadding="8" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Ingrediente</th>
-          <th>Costo de Ingredientes (Bs)</th>
-          <th>MP/U</th>
-          <th>Costo/U (Bs)</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (ing of ingredientes.controls; track ing) {
-        <tr>
-          <td>{{ ing.get('nombre')?.value }}</td>
-          <td>{{ ing.get('costoIngrediente')?.value | number:'1.2-2' }}</td>
-          <td>{{ ing.get('mpPorUnidad')?.value | number:'1.2-2' }}</td>
-          <td>{{ ing.get('costoPorUnidad')?.value | number:'1.2-2' }}</td>
-        </tr>
-        }
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>Total</th>
-          <th>{{ totalCostoIngredientes | number:'1.2-2' }} Bs</th>
-          <th></th>
-          <th>{{ totalCostoPorUnidad | number:'1.2-2' }} Bs</th>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-  }
-
-  <br />
-  <button type="submit" [disabled]="form.invalid">
-    💾 Guardar Materia Prima
-  </button>
-
-  @if(msg){
-
-  <p
-    [ngClass]="{
-      'text-green-600': msg.includes('✅'),
-      'text-red-600': msg.includes('❌')
-    }"
-    class="text-sm mt-2"
-  >
-    {{ msg }}
-  </p>
-  }
 </form>

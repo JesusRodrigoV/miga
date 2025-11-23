@@ -4,6 +4,9 @@ import {
   Component,
   inject,
   OnInit,
+  effect,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectorRef
 } from "@angular/core";
 import {
   FormBuilder,
@@ -12,73 +15,88 @@ import {
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { getSupabase } from "@core/services";
-import { StorageService } from "@core/services/storage-service";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { MgInput } from "@shared/components/mg-input";
+import { MgButton } from "@shared/components/mg-button";
+
+import { ManoDeObraStore } from "../../store/mano-de-obra.store";
 
 @Component({
   selector: "app-mano-de-obra",
-  imports: [ReactiveFormsModule, DecimalPipe],
+  imports: [ReactiveFormsModule, DecimalPipe, MgButton, MgInput],
   templateUrl: "./mano-de-obra.html",
   styleUrl: "./mano-de-obra.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ManoDeObraStore],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export default class ManoDeObra implements OnInit {
   form: FormGroup;
-  planId: string | null = null;
-  msg = "";
-
   pagoHora = 0;
   pagoReceta = 0;
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private storage = inject(StorageService);
+  readonly store = inject(ManoDeObraStore);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
+    console.log("[ManoDeObra Component] Constructor called");
+
     this.form = this.fb.group({
       salarioMinimo: [2750, [Validators.required, Validators.min(1)]],
       diasPorMes: [30, [Validators.required, Validators.min(1)]],
       horasPorDia: [8, [Validators.required, Validators.min(1)]],
       horasReceta: [1, [Validators.required, Validators.min(0.1)]],
     });
-  }
 
-  private supabase: SupabaseClient | null = null;
+    // Efecto para cargar datos iniciales
+    effect(() => {
+      const initialData = this.store.initialData();
+      console.log("[ManoDeObra Component] Initial data effect triggered:", initialData);
 
-  private async getClient(): Promise<SupabaseClient> {
-    if (this.supabase) {
-      return this.supabase;
-    }
+      if (initialData && initialData.inputs_json) {
+        this.form.patchValue(initialData.inputs_json);
+        this.calcularPago();
+      }
+    });
 
-    this.supabase = await getSupabase();
-    return this.supabase;
+    // Efecto para navegar después de guardar
+    effect(() => {
+      const isSaved = this.store.isSaved();
+      const planId = this.store.planId();
+
+      console.log("[ManoDeObra Component] Save status changed:", isSaved);
+
+      if (isSaved && planId) {
+        console.log("[ManoDeObra Component] Navigating to costos-indirectos");
+        this.router.navigate(["/costos/costos-indirectos"], {
+          queryParams: { planId },
+        });
+      }
+    });
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(async (params) => {
-      this.planId = params["planId"] || null;
+    console.log("[ManoDeObra Component] ngOnInit called");
 
-      if (!this.planId) {
-        const supabase = await this.getClient();
-        const { data, error } = await supabase.rpc("create_or_get_plan");
-        if (error) {
-          this.msg = "Error al obtener el plan";
-          return;
-        }
-        this.planId = data;
-      }
+    this.route.queryParams.subscribe((params) => {
+      const planId = params["planId"] || null;
+      console.log("[ManoDeObra Component] Query params planId:", planId);
 
-      this.storage.setItem("currentPlanId", this.planId!);
-
-      await this.loadSection();
+      this.store.loadPageData(planId);
     });
 
-    this.form.valueChanges.subscribe(() => this.calcularPago());
+    // Escuchar cambios en el formulario para recalcular
+    this.form.valueChanges.subscribe(() => {
+      console.log("[ManoDeObra Component] Form values changed");
+      this.calcularPago();
+    });
   }
 
   calcularPago() {
+    console.log("[ManoDeObra Component] calcularPago called");
+
     const salario = this.form.get("salarioMinimo")?.value || 0;
     const dias = this.form.get("diasPorMes")?.value || 1;
     const horas = this.form.get("horasPorDia")?.value || 1;
@@ -86,59 +104,34 @@ export default class ManoDeObra implements OnInit {
 
     this.pagoHora = salario / dias / horas;
     this.pagoReceta = this.pagoHora * horasReceta;
-  }
 
-  async loadSection() {
-    const supabase = await this.getClient();
-    const { data } = await supabase
-      .from("sections")
-      .select("*")
-      .eq("plan_id", this.planId)
-      .eq("tipo", "mano-obra")
-      .single();
+    this.cdr.markForCheck();
 
-    if (data && data.inputs_json) {
-      this.form.patchValue(data.inputs_json);
-      this.calcularPago();
-    }
+    console.log("[ManoDeObra Component] Pagos calculados:", {
+      pagoHora: this.pagoHora,
+      pagoReceta: this.pagoReceta,
+    });
   }
 
   async onSubmit() {
-    if (!this.planId || this.form.invalid) return;
-    const supabase = await this.getClient();
-    const { error } = await supabase.from("sections").upsert(
-      {
-        plan_id: this.planId,
-        tipo: "mano-obra",
-        inputs_json: this.form.getRawValue(),
-        outputs_json: {
-          pagoHora: this.pagoHora,
-          pagoReceta: this.pagoReceta,
-        },
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "plan_id,tipo" },
-    );
+    console.log("[ManoDeObra Component] onSubmit called");
 
-    if (!error) {
-      await supabase
-        .from("plans")
-        .update({ ultima_seccion: "mano-obra" })
-        .eq("id", this.planId);
+    this.form.markAllAsTouched();
+
+    if (this.form.invalid) {
+      console.warn("[ManoDeObra Component] Form is invalid");
+      return;
     }
 
-    const { error: updateError } = await supabase
-      .from("plans")
-      .update({ ultima_seccion: "mano-obra" })
-      .eq("id", this.planId);
+    const formData = this.form.getRawValue();
+    const outputs = {
+      pagoHora: this.pagoHora,
+      pagoReceta: this.pagoReceta,
+    };
 
-    if (updateError) {
-      this.msg = "Guardado pero no se pudo actualizar la sección";
-    } else {
-      this.msg = "✅ Mano de obra guardada";
-      this.router.navigate(["/costos/costos-indirectos"], {
-        queryParams: { planId: this.planId },
-      });
-    }
+    console.log("[ManoDeObra Component] Submitting form data:", formData);
+    console.log("[ManoDeObra Component] Submitting outputs:", outputs);
+
+    await this.store.saveManoDeObra(formData, outputs);
   }
 }

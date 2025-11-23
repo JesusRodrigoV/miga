@@ -1,0 +1,235 @@
+:host {
+  display: block;
+  padding: 0.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+.page-title {
+  font-family: var(--font-montserrat);
+  font-weight: var(--font-weight-bold);
+  font-size: 2rem;
+  color: var(--verde-oscuro);
+  margin-bottom: 2rem;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.form-container {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+}
+
+.parametros-section {
+  margin-bottom: 2rem;
+
+  .section-title {
+    font-family: var(--font-montserrat);
+    font-weight: var(--font-weight-semi-bold);
+    font-size: 1.3rem;
+    color: var(--verde-oscuro);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    ion-icon {
+      font-size: 1.5rem;
+      color: var(--verde-medio);
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  &.single-column {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-family: var(--font-encode-sans);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.95rem;
+    color: var(--verde-oscuro);
+  }
+}
+
+.section-divider {
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--verde-claro),
+    transparent
+  );
+  margin: 2rem 0;
+  border: none;
+}
+
+.resultados-section {
+  background: linear-gradient(135deg, var(--verde-claro) 0%, var(--verde-oscuro) 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+
+  .resultados-title {
+    font-family: var(--font-montserrat);
+    font-weight: var(--font-weight-semi-bold);
+    font-size: 1.3rem;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    ion-icon {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.resultados-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resultado-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .resultado-label {
+    font-family: var(--font-encode-sans);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.9rem;
+    color: var(--verde-oscuro);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    ion-icon {
+      font-size: 1.2rem;
+      color: var(--verde-medio);
+    }
+  }
+
+  .resultado-valor {
+    font-family: var(--font-montserrat);
+    font-weight: var(--font-weight-bold);
+    font-size: 1.8rem;
+    color: var(--verde-oscuro);
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+
+    .moneda {
+      font-size: 1rem;
+      font-weight: var(--font-weight-medium);
+      color: var(--verde-medio);
+      margin-left: 0.25rem;
+    }
+  }
+
+  &.destacado {
+    background: linear-gradient(135deg, var(--white) 0%, var(--amarillo) 100%);
+
+    .resultado-label {
+      color: var(--verde-oscuro);
+      font-weight: var(--font-weight-semi-bold);
+    }
+
+    .resultado-valor {
+      color: var(--verde-oscuro);
+      font-size: 2rem;
+
+      @media (max-width: 768px) {
+        font-size: 1.6rem;
+      }
+
+      .moneda {
+        color: var(--verde-oscuro);
+      }
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    mg-button {
+      width: 100%;
+    }
+  }
+}
+

@@ -23,6 +23,6 @@ export default class Costos {
   ];
 
   ngAfterViewInit() {
-    this.cdr.detectChanges(); // 👈 esto evita el error NG0100
+    this.cdr.detectChanges();
   }
 }

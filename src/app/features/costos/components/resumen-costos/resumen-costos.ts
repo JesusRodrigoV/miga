@@ -1,106 +1,77 @@
 import { DecimalPipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  CUSTOM_ELEMENTS_SCHEMA,
+  effect,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { getSupabase } from "@core/services";
-import { StorageService } from "@core/services/storage-service";
 import { MgButton } from "@shared/components/mg-button";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { ResumenCostosStore } from "../../store/resumen-costos.store";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-resumen-costos",
-  imports: [DecimalPipe, MgButton],
+  imports: [DecimalPipe, MgButton, CommonModule],
   templateUrl: "./resumen-costos.html",
   styleUrl: "./resumen-costos.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ResumenCostosStore],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export default class ResumenCostos {
-  planId: string | null = null;
-
-  totalMP = 0;
-  totalMO = 0;
-  totalCI = 0;
-  unidades = 1;
-
-  cp = 0;
-  cc = 0;
-  cpcc = 0;
-  cu = 0;
-
-  msg = "";
-  loading = true;
-
+export default class ResumenCostos implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private storage = inject(StorageService);
-  private supabase: SupabaseClient | null = null;
+  readonly store = inject(ResumenCostosStore);
 
-  private async getClient(): Promise<SupabaseClient> {
-    if (this.supabase) {
-      return this.supabase;
-    }
+  constructor() {
+    console.log("[ResumenCostos Component] Constructor called");
 
-    this.supabase = await getSupabase();
-    return this.supabase;
-  }
+    // Efecto para logging de cambios en el estado
+    effect(() => {
+      const isLoading = this.store.isLoading();
+      console.log("[ResumenCostos Component] Loading status changed:", isLoading);
+    });
 
-  ngOnInit() {
-    this.route.queryParams.subscribe(async (params) => {
-      this.planId = params["planId"] || this.storage.getItem("currentPlanId");
-      if (!this.planId) {
-        this.msg = "❌ Plan no encontrado";
-        this.loading = false;
-        return;
-      }
+    effect(() => {
+      const hasSufficientData = this.store.hasSufficientData();
+      console.log("[ResumenCostos Component] Has sufficient data:", hasSufficientData);
+    });
 
-      try {
-        await this.cargarDatos();
-        if (this.totalMP === 0 && this.totalMO === 0 && this.totalCI === 0) {
-          this.msg = "ℹ️ Aún no se han registrado costos suficientes.";
-        } else {
-          this.calcularResumen();
-
-          this.msg = "";
-        }
-      } catch (err) {
-        this.msg = "❌ Error al obtener los datos";
-      } finally {
-        this.loading = false;
-      }
+    effect(() => {
+      const totals = {
+        totalMP: this.store.totalMP(),
+        totalMO: this.store.totalMO(),
+        totalCI: this.store.totalCI(),
+        unidades: this.store.unidades(),
+        costoPonderado: this.store.costoPonderado(),
+        costoConversion: this.store.costoConversion(),
+        costoProduccion: this.store.costoProduccion(),
+        costoUnitario: this.store.costoUnitario(),
+      };
+      console.log("[ResumenCostos Component] Totals updated:", totals);
     });
   }
 
-  async cargarDatos() {
-    const get = async (tipo: string) => {
-      const supabase = await this.getClient();
-      const { data } = await supabase
-        .from("sections")
-        .select("*")
-        .eq("plan_id", this.planId)
-        .eq("tipo", tipo)
-        .single();
-      return data;
-    };
+  ngOnInit() {
+    console.log("[ResumenCostos Component] ngOnInit called");
 
-    const mp = await get("costos");
-    const mo = await get("mano-obra");
-    const ci = await get("costos-indirectos");
+    this.route.queryParams.subscribe((params) => {
+      const planId = params["planId"] || null;
+      console.log("[ResumenCostos Component] Query params planId:", planId);
 
-    this.unidades = mp?.inputs_json?.unidadesProducidas || 1;
-    this.totalMP = mp?.outputs_json?.totalCostoIngredientes || 0;
-    this.totalMO = mo?.outputs_json?.pagoReceta || 0;
-    this.totalCI = ci?.outputs_json?.totalCostoIndirecto || 0;
-  }
-
-  calcularResumen() {
-    this.cp = this.totalMP + this.totalMO;
-    this.cc = this.totalMO + this.totalCI;
-    this.cpcc = this.totalMP + this.totalMO + this.totalCI;
-    this.cu = this.cpcc / this.unidades;
+      this.store.loadResumen(planId);
+    });
   }
 
   navigateToPonEnMarcha() {
+    const planId = this.store.planId();
+    console.log("[ResumenCostos Component] Navigating to pon-en-marcha with planId:", planId);
+
     this.router.navigate(["/pon-en-marcha"], {
-      queryParams: { planId: this.planId },
+      queryParams: { planId },
     });
   }
 }

@@ -1,106 +1,182 @@
-<div class="costos-container">
-  <h2>Costos Indirectos</h2>
+<h2 class="page-title">Parte 3: Costos Indirectos</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="indirectos-form">
-    <div formArrayName="indirectos" class="items-list">
-      @for (ind of indirectos.controls; track ind; let i = $index) {
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
 
-      <div [formGroupName]="i" class="item-card">
-        <div class="item-header">
-          <h4>Ítem #{{ i + 1 }}</h4>
-          <mg-button
-            icon="pi pi-trash"
-            severity="danger"
-            [fluid]="false"
-            (onClick)="removeIndirecto(i)"
-          />
+
+  <div class="items-section" formArrayName="indirectos">
+    <div class="section-header">
+      <h3>Ítems de Costos Indirectos</h3>
+    </div>
+
+    @for (ind of indirectos.controls; track ind; let i = $index) {
+      <div class="item-card" [class.collapsed]="itemCollapsed[i]" [formGroupName]="i">
+
+        <div class="item-header" (click)="toggleItem(i)">
+          <div class="header-left">
+            <span class="item-number">Ítem {{ i + 1 }}</span>
+            <span class="item-description">
+              {{ ind.get('descripcion')?.value || 'Sin descripción' }}
+            </span>
+          </div>
+          <div class="header-actions">
+            <mg-button
+              label="Borrar"
+              icon="trash-outline"
+              [color]="'var(--rojo)'"
+              [hoverColor]="'var(--black)'"
+              [textColor]="'var(--white)'"
+              [fluid]="false"
+              (onClick)="removeIndirecto(i); $event.stopPropagation()"
+            />
+            <ion-icon name="chevron-down-outline" class="collapse-icon"></ion-icon>
+          </div>
         </div>
 
-        <div class="item-grid">
-          <div class="full-width">
+        <div class="item-body">
+
+          <div class="form-grid">
+            <div class="full-width">
+              <mg-input
+                label="Descripción del ítem"
+                formControlName="descripcion"
+                [invalid]="!!(ind.get('descripcion')?.invalid && ind.get('descripcion')?.touched)"
+                errorMessage="Campo requerido"
+                [fluid]="true"
+              />
+            </div>
+
             <mg-input
-              label="Descripción"
-              formControlName="descripcion"
+              label="Costo Mensual (Bs)"
+              type="number"
+              formControlName="costoMensual"
+              [invalid]="!!(ind.get('costoMensual')?.invalid && ind.get('costoMensual')?.touched)"
+              errorMessage="Valor inválido"
+              [fluid]="true"
+            />
+
+            <mg-input
+              label="Días Calculados"
+              type="number"
+              formControlName="diasCalculados"
+              [invalid]="!!(ind.get('diasCalculados')?.invalid && ind.get('diasCalculados')?.touched)"
+              errorMessage="Valor inválido"
+              [fluid]="true"
+            />
+
+            <mg-input
+              label="Horas Requeridas"
+              type="number"
+              formControlName="horasRequeridas"
+              [invalid]="!!(ind.get('horasRequeridas')?.invalid && ind.get('horasRequeridas')?.touched)"
+              errorMessage="Valor inválido"
               [fluid]="true"
             />
           </div>
 
-          <mg-input
-            label="Costo Mensual"
-            formControlName="costoMensual"
-            type="number"
-            [fluid]="true"
-          />
+          <div class="calculated-section">
+            <div class="section-subtitle">
+              <ion-icon name="calculator-outline"></ion-icon>
+              Valores Calculados Automáticamente
+            </div>
 
-          <mg-input
-            label="Días Calc."
-            formControlName="diasCalculados"
-            type="number"
-            [fluid]="true"
-          />
+            <div class="form-grid">
+              <mg-input
+                label="Costo por Día (Bs)"
+                type="number"
+                formControlName="costoPorDia"
+                [fluid]="true"
+                [disabled]="true"
+              />
 
-          <mg-input
-            label="Horas Req."
-            formControlName="horasRequeridas"
-            type="number"
-            [fluid]="true"
-          />
+              <mg-input
+                label="Costo por Hora (Bs)"
+                type="number"
+                formControlName="costoPorHora"
+                [fluid]="true"
+                [disabled]="true"
+              />
 
-          <mg-input
-            label="Costo/Día"
-            formControlName="costoPorDia"
-            type="number"
-            [fluid]="true"
-          />
-          <mg-input
-            label="Costo/Hora"
-            formControlName="costoPorHora"
-            type="number"
-            [fluid]="true"
-          />
-          <mg-input
-            label="Costo Neto"
-            formControlName="costoNeto"
-            type="number"
-            [fluid]="true"
-          />
+              <mg-input
+                label="Costo Neto (Bs)"
+                type="number"
+                formControlName="costoNeto"
+                [fluid]="true"
+                [disabled]="true"
+              />
+            </div>
+          </div>
+
         </div>
       </div>
-      }
-    </div>
+    }
 
-    <div class="actions-bar">
+    <div class="add-item-wrapper">
       <mg-button
-        label="+ Agregar Ítem"
-        severity="secondary"
+        label="Agregar Ítem"
+        icon="add-circle-outline"
+        [color]="'var(--verde-medio)'"
+        [hoverColor]="'var(--black)'"
+        [textColor]="'var(--white)'"
         [fluid]="false"
         [buttonProps]="{ type: 'button' }"
         (onClick)="addIndirecto()"
       />
-
-      <mg-button
-        label="Guardar y Continuar"
-        [loading]="isLoading()"
-        [disabled]="form.invalid || isLoading()"
-        [buttonProps]="{ type: 'submit' }"
-        [fluid]="false"
-      />
-    </div>
-  </form>
-
-  <div class="resumen-card">
-    <h3>Resumen de Totales</h3>
-    <div class="resumen-grid">
-      <div class="resumen-item">
-        <span>Total Mensual</span>
-        <strong>{{ totalCostoMensual | number: '1.2-2' }} Bs</strong>
-      </div>
-      <div class="resumen-item">
-        <span>Total Neto</span>
-        <strong class="highlight"
-          >{{ totalCostoNeto | number: '1.2-2' }} Bs</strong
-        >
-      </div>
     </div>
   </div>
-</div>
+
+  @if (indirectos.length > 0) {
+    <div class="resumen-section">
+      <h3>
+        <ion-icon name="stats-chart-outline"></ion-icon>
+        Resumen de Totales
+      </h3>
+
+      <div class="resumen-grid">
+        <div class="resumen-card">
+          <div class="resumen-label">
+            <ion-icon name="calendar-outline"></ion-icon>
+            Total Costo Mensual
+          </div>
+          <div class="resumen-valor">
+            {{ totalCostoMensual | number: '1.2-2' }}
+            <span class="moneda">Bs</span>
+          </div>
+        </div>
+
+        <div class="resumen-card destacado">
+          <div class="resumen-label">
+            <ion-icon name="cash-outline"></ion-icon>
+            Total Costo Neto
+          </div>
+          <div class="resumen-valor">
+            {{ totalCostoNeto | number: '1.2-2' }}
+            <span class="moneda">Bs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="form-actions">
+    <mg-button
+      label="Cancelar"
+      [color]="'var(--rojo)'"
+      [hoverColor]="'var(--black)'"
+      [textColor]="'var(--white)'"
+      [fluid]="false"
+    />
+
+    <mg-button
+      label="Guardar y continuar"
+      icon="save-outline"
+      [color]="'var(--verde-medio)'"
+      [hoverColor]="'var(--black)'"
+      [textColor]="'var(--white)'"
+      [disabled]="form.invalid"
+      [loading]="store.isLoading()"
+      [fluid]="false"
+      [buttonProps]="{ type: 'submit' }"
+    />
+  </div>
+
+</form>

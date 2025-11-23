@@ -1,15 +1,24 @@
-<h2>Parte 3: Costos</h2>
+<section class="costos-container">
+  <header class="costos-header">
+    <h2 class="costos-title">Parte 3: Costos</h2>
+  </header>
 
-<nav class="mb-4">
-  @for (link of costoLinks; track link.route; let isLast = $last) {
+  <nav class="costos-nav">
+    @for (link of costoLinks; track link.route; let isLast = $last) {
+      <a
+        [routerLink]="link.route"
+        routerLinkActive="costos-nav_link-active"
+        class="costos-nav_link">
+        {{ link.label }}
+      </a>
 
-  <a [routerLink]="link.route" routerLinkActive="font-bold">
-    {{ link.label }}
-  </a>
+      @if (!isLast) {
+        <span class="costos-nav_separator">|</span>
+      }
+    }
+  </nav>
 
-  @if (!isLast) {
-  <span> | </span>
-  } }
-</nav>
-
-<router-outlet></router-outlet>
+  <div class="costos-content">
+    <router-outlet></router-outlet>
+  </div>
+</section>
