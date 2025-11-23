@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import { PlanesService } from "../services";
 import { signalStore, withState, withMethods, patchState } from "@ngrx/signals";
 import { ToastBuilder, ToastService } from "@shared/services/toast";
+import { log } from "console";
 
 type PlanesState = {
   planes: any[];
@@ -25,6 +26,7 @@ export const PlanesStore = signalStore(
         patchState(store, { isLoading: true });
         try {
           const data = await service.getPlanes();
+          console.log("Data PDF:", data);
           patchState(store, { planes: data });
         } catch (error: any) {
           toastService.show(

@@ -28,6 +28,7 @@ export const GenerarPdfStore = signalStore(
 
         try {
           const secciones = await dataService.fetchAllSections(planId);
+          console.log("Data PDF secciones:", secciones);
 
           pdfService.generate(planId, secciones);
 
