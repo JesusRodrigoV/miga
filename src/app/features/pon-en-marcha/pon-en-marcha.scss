@@ -1,4 +1,21 @@
-.header {
+:host {
+  display: block;
+  padding: 2rem 1rem;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+
+  .header {
     margin-bottom: 1rem;
     border-left: 6px solid var(--verde-botones);
     padding-left: 1.5rem;
@@ -23,3 +40,33 @@
       line-height: 1.5;
     }
   }
+}
+
+.smart-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--surface-border);
+
+    @media (max-width: 600px) {
+      flex-direction: column-reverse;
+
+      mg-button {
+        width: 100%;
+      }
+    }
+  }
+}

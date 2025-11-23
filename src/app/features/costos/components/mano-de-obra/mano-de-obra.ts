@@ -54,7 +54,7 @@ export default class ManoDeObra implements OnInit {
     effect(() => {
       const initialData = this.store.initialData();
       console.log("[ManoDeObra Component] Initial data effect triggered:", initialData);
-
+      this.calcularPago();
       if (initialData && initialData.inputs_json) {
         this.form.patchValue(initialData.inputs_json);
         this.calcularPago();

@@ -47,13 +47,13 @@
             <mg-button
               icon="pi pi-trash"
               [rounded]="true"
-              label="Borrar"
               [color]="'var(--rojo)'"
               [hoverColor]="'var(--black)'"
-              [size]="$any('small')"
               [fluid]="false"
               (onClick)="removeIngrediente(i); $event.stopPropagation()"
-            />
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+            </mg-button>
             <ion-icon name="chevron-down-outline" class="collapse-icon"></ion-icon>
           </div>
         </div>
