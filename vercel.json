@@ -1,11 +1,17 @@
 {
   "version": 2,
-  "public": true,
-  "name": "miga",
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
+  "framework": "angular",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/miga/browser",
   "functions": {
     "api/index.js": {
-      "includeFiles": "dist/miga/browser/**"
+      "includeFiles": "dist/miga/**"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ]
 }
