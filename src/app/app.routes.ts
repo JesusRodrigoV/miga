@@ -8,6 +8,7 @@ export const routes: Routes = [
     path: "",
     loadComponent: () => import("./core/layout/layout"),
     children: [
+      { path: "", redirectTo: "inicio", pathMatch: "full" },
       {
         path: "inicio",
         title: "Inicio",
